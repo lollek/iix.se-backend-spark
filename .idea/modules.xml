@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/spark-backend.iml" filepath="$PROJECT_DIR$/.idea/modules/spark-backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/spark-backend_main.iml" filepath="$PROJECT_DIR$/.idea/modules/spark-backend_main.iml" group="spark-backend" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/spark-backend_test.iml" filepath="$PROJECT_DIR$/.idea/modules/spark-backend_test.iml" group="spark-backend" />
+    </modules>
+  </component>
+</project>
