@@ -2,15 +2,15 @@ package controller;
 
 import Database.Database;
 import com.google.gson.Gson;
-import model.Note;
+import model.Book;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
-public class NotesController {
+public class BooksController {
 
     public static Route index = (Request request, Response response) ->
-            new Gson().toJson(Database.index(Note.class));
+            new Gson().toJson(Database.index(Book.class));
 
     public static Route show = (Request request, Response response) -> {
         int id;
@@ -19,6 +19,6 @@ public class NotesController {
         } catch (NumberFormatException exception) {
             return null;
         }
-        return new Gson().toJson(Database.show(Note.class, id));
+        return new Gson().toJson(Database.show(Book.class, id));
     };
 }
