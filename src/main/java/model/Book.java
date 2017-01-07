@@ -8,43 +8,19 @@ import java.io.Serializable;
 @DatabaseTable(tableName = "books")
 public class Book implements Serializable{
 
+    @SuppressWarnings("unused")
     @DatabaseField(generatedId = true)
     private int id;
 
+    @SuppressWarnings("unused")
     @DatabaseField
     private String title;
 
+    @SuppressWarnings("unused")
     @DatabaseField
     private String author;
 
+    @SuppressWarnings("unused")
     @DatabaseField
     private String other;
-
-    public int getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getOther() {
-        return other;
-    }
-
-    public void setOther(String other) {
-        this.other = other;
-    }
 }

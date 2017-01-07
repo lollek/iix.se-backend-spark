@@ -10,44 +10,20 @@ import java.util.Date;
 @DatabaseTable(tableName = "notes")
 public class Note implements Serializable {
 
+    @SuppressWarnings("unused")
     @DatabaseField(generatedId = true)
     private int id;
 
+    @SuppressWarnings("unused")
     @DatabaseField
     private String title;
 
+    @SuppressWarnings("unused")
     @DatabaseField
     private String text;
 
+    @SuppressWarnings("unused")
     @DatabaseField(dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
     private Date date;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public int getId() {
-        return id;
-    }
 }
 

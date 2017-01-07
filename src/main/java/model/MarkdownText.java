@@ -10,32 +10,16 @@ public class MarkdownText implements Serializable {
     public static final String NAME_FIELD_NAME = "name";
     public static final String ID_FIELD_NAME = "id";
 
+    @SuppressWarnings("unused")
     @DatabaseField(generatedId = true, columnName = ID_FIELD_NAME)
     private int id;
 
+    @SuppressWarnings("unused")
     @DatabaseField(columnName = NAME_FIELD_NAME)
     private String name;
 
+    @SuppressWarnings("unused")
     @DatabaseField
     private String data;
 
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
 }
