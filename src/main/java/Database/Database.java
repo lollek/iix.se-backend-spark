@@ -4,9 +4,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
-import model.Book;
-import model.MarkdownText;
-import model.Note;
+import model.*;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -19,6 +17,8 @@ public class Database {
         DaoManager.createDao(connectionSource, Note.class);
         DaoManager.createDao(connectionSource, Book.class);
         DaoManager.createDao(connectionSource, MarkdownText.class);
+        DaoManager.createDao(connectionSource, User.class);
+        DaoManager.createDao(connectionSource, Group.class);
     }
 
     private static Dao getDao(Class<?> clazz) {
