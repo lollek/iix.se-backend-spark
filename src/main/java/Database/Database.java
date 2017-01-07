@@ -4,6 +4,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import model.Book;
 import model.Note;
 
 import java.sql.SQLException;
@@ -15,6 +16,7 @@ public class Database {
     public static void init() throws SQLException {
         connectionSource = new JdbcConnectionSource("jdbc:sqlite:production.sqlite3");
         DaoManager.createDao(connectionSource, Note.class);
+        DaoManager.createDao(connectionSource, Book.class);
     }
 
     private static Dao getDao(Class<?> clazz) {
@@ -26,7 +28,7 @@ public class Database {
     }
 
     public static Object show(Class<?> clazz, int id) throws SQLException {
-        Dao dao = DaoManager.lookupDao(connectionSource, clazz);
+        Dao dao = getDao(clazz);
         return dao.queryForFirst(dao.queryBuilder().where().eq("id", id).prepare());
     }
 }
