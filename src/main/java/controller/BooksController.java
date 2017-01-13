@@ -1,6 +1,6 @@
 package controller;
 
-import Database.Database;
+import database.Database;
 import com.google.gson.Gson;
 import model.Book;
 import spark.Request;

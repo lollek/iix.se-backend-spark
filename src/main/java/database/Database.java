@@ -1,4 +1,4 @@
-package Database;
+package database;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -21,7 +21,7 @@ public class Database {
         DaoManager.createDao(connectionSource, Group.class);
     }
 
-    private static Dao getDao(Class<?> clazz) {
+    public static Dao getDao(Class<?> clazz) {
         return DaoManager.lookupDao(connectionSource, clazz);
     }
 
