@@ -14,11 +14,12 @@ public class Database {
 
     public static void init() throws SQLException {
         connectionSource = new JdbcConnectionSource("jdbc:sqlite:db/production.sqlite3");
-        DaoManager.createDao(connectionSource, Note.class);
+        DaoManager.createDao(connectionSource, Beer.class);
         DaoManager.createDao(connectionSource, Book.class);
-        DaoManager.createDao(connectionSource, MarkdownText.class);
-        DaoManager.createDao(connectionSource, User.class);
         DaoManager.createDao(connectionSource, Group.class);
+        DaoManager.createDao(connectionSource, MarkdownText.class);
+        DaoManager.createDao(connectionSource, Note.class);
+        DaoManager.createDao(connectionSource, User.class);
     }
 
     public static Dao getDao(Class<?> clazz) {
