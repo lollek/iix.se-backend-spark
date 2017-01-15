@@ -16,7 +16,8 @@ public class App {
         staticFiles.externalLocation(System.getProperty("staticFolder"));
 
         // Special services
-        get("/api/login", LoginController.login);
+        get("/api/login", LoginController.checkLogin);
+        post("/api/login", LoginController.login);
 
         // Resources
         get("/api/beers", BeersController.index);
@@ -32,6 +33,7 @@ public class App {
         get("/api/notes/:id", NotesController.show);
 
         // Config
+        after((request, response) -> response.type("application/json"));
         after(LogService::logAccess);
         exception(Exception.class, (exception, request, response) -> {
             LogService.logAccess(request, response);

@@ -1,18 +1,32 @@
 package controller;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import service.AccessService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
+import java.util.Map;
+
 public class LoginController {
 
+    public static Route checkLogin = (Request request, Response response) -> {
+        response.status(AccessService.isLoggedIn(request) ? 200 : 401);
+        return "";
+    };
+
     public static Route login = (Request request, Response response) -> {
-        if (request.session().attribute("username") != null) {
-            response.status(200);
+        final Map<String, String> data = new Gson().fromJson(request.body(), new TypeToken<Map<String, String>>(){}.getType());
+        final String username = data.get("username");
+        final String password = data.get("password");
+
+        if (username == null || username.isEmpty()) {
+            response.status(403);
             return "";
         }
 
-        response.status(403);
+        response.status(AccessService.authenticate(request, username, password) ? 200 : 403);
         return "";
     };
 }

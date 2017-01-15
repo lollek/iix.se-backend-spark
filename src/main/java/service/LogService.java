@@ -12,8 +12,10 @@ public class LogService {
     private final static Logger logger = Logger.getLogger(LogService.class);
 
     public static void logAccess(Request request, Response response) {
-        logger.info(String.format("%s %s %s %s %s",
-                request.ip(), request.protocol(), request.requestMethod(), request.url(), response.status()));
+        final String requestBody = request.body().replaceAll("\"password\":\".*?\"", "\"password>\":\"<removed>\"");
+
+        logger.info(String.format("%s %s %s %s %s [%s]",
+                request.ip(), request.protocol(), request.requestMethod(), request.url(), response.status(), requestBody));
     }
 
     public static void logException(Exception exception) {
