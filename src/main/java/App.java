@@ -33,6 +33,11 @@ public class App {
         get("/api/notes/:id", NotesController.show);
 
         // Config
+        notFound(((request, response) -> {
+            response.redirect("/#!/404");
+            return "";
+        }));
+
         after((request, response) -> response.type("application/json"));
         after(LogService::logAccess);
         exception(Exception.class, (exception, request, response) -> {
