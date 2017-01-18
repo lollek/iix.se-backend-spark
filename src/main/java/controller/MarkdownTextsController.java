@@ -1,8 +1,8 @@
 package controller;
 
 import database.Database;
-import com.google.gson.Gson;
 import model.MarkdownText;
+import service.JsonService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -10,7 +10,7 @@ import spark.Route;
 public class MarkdownTextsController {
 
     public static Route index = (Request request, Response response) ->
-            new Gson().toJson(Database.index(MarkdownText.class, MarkdownText.ID_FIELD_NAME, MarkdownText.NAME_FIELD_NAME ));
+            JsonService.toJson(Database.index(MarkdownText.class, MarkdownText.ID_FIELD_NAME, MarkdownText.NAME_FIELD_NAME ));
 
     public static Route show = (Request request, Response response) -> {
         int id;
@@ -19,6 +19,6 @@ public class MarkdownTextsController {
         } catch (NumberFormatException exception) {
             return null;
         }
-        return new Gson().toJson(Database.show(MarkdownText.class, id));
+        return JsonService.toJson(Database.show(MarkdownText.class, id));
     };
 }

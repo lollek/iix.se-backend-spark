@@ -1,8 +1,8 @@
 package controller;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import service.AccessService;
+import service.JsonService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -17,7 +17,7 @@ public class LoginController {
     };
 
     public static Route login = (Request request, Response response) -> {
-        final Map<String, String> data = new Gson().fromJson(request.body(), new TypeToken<Map<String, String>>(){}.getType());
+        final Map<String, String> data = JsonService.fromJson(request.body(), new TypeToken<Map<String, String>>(){}.getType());
         final String username = data.get("username");
         final String password = data.get("password");
 

@@ -9,6 +9,7 @@ import java.util.Date;
 
 @DatabaseTable(tableName = "notes")
 public class Note implements Serializable {
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
 
     @SuppressWarnings("unused")
     @DatabaseField(generatedId = true)
@@ -23,7 +24,7 @@ public class Note implements Serializable {
     private String text;
 
     @SuppressWarnings("unused")
-    @DatabaseField(dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
+    @DatabaseField(dataType = DataType.DATE_STRING, format = DATE_FORMAT)
     private Date date;
 }
 
