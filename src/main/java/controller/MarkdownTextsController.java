@@ -9,8 +9,6 @@ import spark.Route;
 
 public class MarkdownTextsController extends ModelController {
 
-    public static Route index = (Request request, Response response) ->
-            JsonService.toJson(Database.index(MarkdownText.class, MarkdownText.ID_FIELD_NAME, MarkdownText.NAME_FIELD_NAME ));
-
     public static Route show = (Request request, Response response) -> show(MarkdownText.class, request, response);
+    public static Route update = (Request request, Response response) -> update(MarkdownText.class, request, response);
 }
