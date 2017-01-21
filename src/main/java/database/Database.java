@@ -3,6 +3,7 @@ package database;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import model.*;
 
@@ -37,7 +38,7 @@ public class Database {
 
     public static <T> T show(Class<T> clazz, int id) throws SQLException {
         final Dao<T, Integer> dao = getDao(clazz);
-        return dao.queryForFirst(dao.queryBuilder().where().eq("id", id).prepare());
+        return dao.queryForFirst(dao.queryBuilder().where().idEq(id).prepare());
     }
 
     public static <T> boolean save(Class<T> clazz, T object) {
@@ -52,6 +53,17 @@ public class Database {
     public static <T> boolean update(Class<T> clazz, T object) {
         try {
             getDao(clazz).update(object);
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public static <T> boolean delete(Class <T> clazz, int id) {
+        try {
+            DeleteBuilder<T, Integer> deleteBuilder = getDao(clazz).deleteBuilder();
+            deleteBuilder.where().idEq(id);
+            deleteBuilder.delete();
             return true;
         } catch (SQLException e) {
             return false;

@@ -22,9 +22,15 @@ public class App {
         // Resources
         get("/api/beers", BeersController.index);
         get("/api/beers/:id", BeersController.show);
+        post("/api/beers", BeersController.save);
+        put("/api/beers/:id", BeersController.update);
+        delete("/api/beers/:id", BeersController.delete);
 
         get("/api/books", BooksController.index);
         get("/api/books/:id", BooksController.show);
+        post("/api/books", BooksController.save);
+        put("/api/books/:id", BooksController.update);
+        delete("/api/books/:id", BooksController.delete);
 
         get("/api/markdown_text", MarkdownTextsController.index);
         get("/api/markdown_text/:id", MarkdownTextsController.show);
@@ -33,6 +39,7 @@ public class App {
         get("/api/notes/:id", NotesController.show);
         post("/api/notes", NotesController.save);
         put("/api/notes/:id", NotesController.update);
+        delete("/api/notes/:id", NotesController.delete);
 
         get("*", ((request, response) -> {
             response.redirect("/#!/404");
