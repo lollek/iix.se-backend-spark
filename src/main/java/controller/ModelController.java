@@ -27,6 +27,7 @@ abstract class ModelController {
         Integer id = getId(request);
         if (id == null) {
             response.status(HttpStatus.BAD_REQUEST_400);
+            return "";
         }
         return JsonService.toJson(Database.show(clazz, id));
     }
