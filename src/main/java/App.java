@@ -41,6 +41,11 @@ public class App {
         put("/api/notes/:id", NotesController.update);
         delete("/api/notes/:id", NotesController.delete);
 
+        get("*", ((request, response) -> {
+            response.redirect("/#!/404");
+            return "";
+        }));
+
         notFound("");
         internalServerError("");
         after((request, response) -> response.type("application/json"));
