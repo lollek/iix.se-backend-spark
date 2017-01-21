@@ -10,6 +10,8 @@ import java.util.Date;
 @DatabaseTable(tableName = "notes")
 public class Note extends Model implements Serializable {
     public static final String DATE_FORMAT = "yyyy-MM-dd";
+    public static final String TITLE_FIELD_NAME = "title";
+    public static final String DATE_FIELD_NAME = "date";
 
     @SuppressWarnings("unused")
     @DatabaseField
