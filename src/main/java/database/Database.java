@@ -5,7 +5,6 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.support.ConnectionSource;
-import com.sun.istack.internal.NotNull;
 import model.*;
 
 import java.sql.SQLException;
@@ -24,25 +23,25 @@ public class Database {
         DaoManager.createDao(connectionSource, User.class);
     }
 
-    public static <T> Dao<T, Integer> getDao(@NotNull Class<T> clazz) {
+    public static <T> Dao<T, Integer> getDao(Class<T> clazz) {
         return DaoManager.lookupDao(connectionSource, clazz);
     }
 
-    public static <T> List<T> index(@NotNull Class<T> clazz) throws SQLException {
+    public static <T> List<T> index(Class<T> clazz) throws SQLException {
         return getDao(clazz).queryForAll();
     }
 
-    public static <T> List<T> index(@NotNull Class<T> clazz, @NotNull String... columns)throws SQLException {
+    public static <T> List<T> index(Class<T> clazz, String... columns)throws SQLException {
         final Dao<T, Integer> dao = getDao(clazz);
         return dao.query(dao.queryBuilder().selectColumns(columns).prepare());
     }
 
-    public static <T> T show(@NotNull Class<T> clazz, int id) throws SQLException {
+    public static <T> T show(Class<T> clazz, int id) throws SQLException {
         final Dao<T, Integer> dao = getDao(clazz);
         return dao.queryForFirst(dao.queryBuilder().where().idEq(id).prepare());
     }
 
-    public static <T> boolean save(@NotNull Class<T> clazz,@NotNull T object) {
+    public static <T> boolean save(Class<T> clazz, T object) {
         try {
             getDao(clazz).create(object);
             return true;
@@ -51,7 +50,7 @@ public class Database {
         }
     }
 
-    public static <T> boolean update(@NotNull Class<T> clazz,@NotNull  T object) {
+    public static <T> boolean update( Class<T> clazz,  T object) {
         try {
             getDao(clazz).update(object);
             return true;
@@ -60,7 +59,7 @@ public class Database {
         }
     }
 
-    public static <T> boolean delete(@NotNull Class <T> clazz, int id) {
+    public static <T> boolean delete( Class <T> clazz, int id) {
         try {
             DeleteBuilder<T, Integer> deleteBuilder = getDao(clazz).deleteBuilder();
             deleteBuilder.where().idEq(id);

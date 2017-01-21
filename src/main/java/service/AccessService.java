@@ -1,8 +1,6 @@
 package service;
 
 import com.j256.ormlite.dao.Dao;
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import database.Database;
 import model.User;
 import spark.Request;
@@ -15,7 +13,7 @@ public class AccessService {
         return request.session().attribute("username") != null;
     }
 
-    public static boolean authenticate(Request request, @NotNull String username, @Nullable String password) {
+    public static boolean authenticate(Request request, String username, String password) {
         Dao<User, Integer> dao = Database.getDao(User.class);
         User user = null;
         try {
