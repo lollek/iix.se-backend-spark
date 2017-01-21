@@ -23,7 +23,7 @@ public class App {
             staticFiles.externalLocation(System.getProperty("staticFolder"));
         } else {
             port(80);
-            staticFiles.location(System.getProperty("staticFolder"));
+            staticFiles.location("/public");
         }
 
         // Special services
@@ -51,11 +51,6 @@ public class App {
         post("/api/notes", NotesController.save);
         put("/api/notes/:id", NotesController.update);
         delete("/api/notes/:id", NotesController.delete);
-
-        get("*", ((request, response) -> {
-            response.redirect("/#!/404");
-            return "";
-        }));
 
         notFound("");
         internalServerError("");
