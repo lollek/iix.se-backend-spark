@@ -12,7 +12,7 @@ public class App {
 
         // Init
         Database.init();
-        port(4567);
+        port(Integer.parseInt(System.getProperty("port")));
         staticFiles.externalLocation(System.getProperty("staticFolder"));
 
         // Special services
