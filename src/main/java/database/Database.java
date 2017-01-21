@@ -22,21 +22,39 @@ public class Database {
         DaoManager.createDao(connectionSource, User.class);
     }
 
-    public static Dao getDao(Class<?> clazz) {
+    public static <T> Dao<T, Integer> getDao(Class<T> clazz) {
         return DaoManager.lookupDao(connectionSource, clazz);
     }
 
-    public static List index(Class<?> clazz) throws SQLException {
+    public static <T> List<T> index(Class<T> clazz) throws SQLException {
         return getDao(clazz).queryForAll();
     }
 
-    public static List index(Class<?> clazz, String... columns)throws SQLException {
-        final Dao dao = getDao(clazz);
+    public static <T> List<T> index(Class<T> clazz, String... columns)throws SQLException {
+        final Dao<T, Integer> dao = getDao(clazz);
         return dao.query(dao.queryBuilder().selectColumns(columns).prepare());
     }
 
-    public static Object show(Class<?> clazz, int id) throws SQLException {
-        final Dao dao = getDao(clazz);
+    public static <T> T show(Class<T> clazz, int id) throws SQLException {
+        final Dao<T, Integer> dao = getDao(clazz);
         return dao.queryForFirst(dao.queryBuilder().where().eq("id", id).prepare());
+    }
+
+    public static <T> boolean save(Class<T> clazz, T object) {
+        try {
+            getDao(clazz).create(object);
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public static <T> boolean update(Class<T> clazz, T object) {
+        try {
+            getDao(clazz).update(object);
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 }

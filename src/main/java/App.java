@@ -31,13 +31,16 @@ public class App {
 
         get("/api/notes", NotesController.index);
         get("/api/notes/:id", NotesController.show);
+        post("/api/notes", NotesController.save);
+        put("/api/notes/:id", NotesController.update);
 
-        // Config
-        notFound(((request, response) -> {
+        get("*", ((request, response) -> {
             response.redirect("/#!/404");
             return "";
         }));
 
+        notFound("");
+        internalServerError("");
         after((request, response) -> response.type("application/json"));
         after(LogService::logAccess);
         exception(Exception.class, (exception, request, response) -> {

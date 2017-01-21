@@ -8,23 +8,19 @@ import java.io.Serializable;
 import java.util.Date;
 
 @DatabaseTable(tableName = "notes")
-public class Note implements Serializable {
+public class Note extends Model implements Serializable {
     public static final String DATE_FORMAT = "yyyy-MM-dd";
 
     @SuppressWarnings("unused")
-    @DatabaseField(generatedId = true)
-    private int id;
+    @DatabaseField
+    public String title;
 
     @SuppressWarnings("unused")
     @DatabaseField
-    private String title;
-
-    @SuppressWarnings("unused")
-    @DatabaseField
-    private String text;
+    public String text;
 
     @SuppressWarnings("unused")
     @DatabaseField(dataType = DataType.DATE_STRING, format = DATE_FORMAT)
-    private Date date;
+    public Date date;
 }
 
