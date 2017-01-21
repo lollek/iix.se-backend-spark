@@ -29,6 +29,7 @@ public class App {
         // Special services
         get("/api/login", LoginController.checkLogin);
         post("/api/login", LoginController.login);
+        delete("/api/login", LoginController.logout);
 
         // Resources
         get("/api/beers", BeersController.index);

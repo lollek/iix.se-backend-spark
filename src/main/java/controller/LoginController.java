@@ -35,7 +35,12 @@ public class LoginController {
             return "";
         }
 
-        response.status(AccessService.authenticate(request, username, password) ? 200 : 403);
+        response.status(AccessService.login(request, username, password) ? 200 : 403);
+        return "";
+    };
+
+    public static Route logout = (Request request, Response response) -> {
+        AccessService.logout(request);
         return "";
     };
 }

@@ -17,7 +17,7 @@ public class AccessService {
         return request.session().attribute("username");
     }
 
-    public static boolean authenticate(Request request, String username, String password) {
+    public static boolean login(Request request, String username, String password) {
         Dao<User, Integer> dao = Database.getDao(User.class);
         User user = null;
         try {
@@ -32,5 +32,9 @@ public class AccessService {
 
         request.session().attribute("username", username);
         return true;
+    }
+
+    public static void logout(Request request) {
+        request.session().attribute("username", null);
     }
 }
