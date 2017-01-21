@@ -6,11 +6,7 @@ import com.sun.istack.internal.Nullable;
 import org.mindrot.jbcrypt.BCrypt;
 
 @DatabaseTable(tableName = "users")
-public class User {
-
-    @SuppressWarnings("unused")
-    @DatabaseField(generatedId = true)
-    private int id;
+public class User extends Model {
 
     @SuppressWarnings("unused")
     @DatabaseField

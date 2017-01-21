@@ -10,7 +10,7 @@ import spark.Response;
 
 import java.sql.SQLException;
 
-class BaseApiController {
+abstract class ModelController {
     static String index(Class<?> clazz) throws SQLException {
         return JsonService.toJson(Database.index(clazz));
     }

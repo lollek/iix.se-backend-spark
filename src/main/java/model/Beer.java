@@ -6,11 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 
 @DatabaseTable(tableName = "beers")
-public class Beer implements Serializable {
-
-    @SuppressWarnings("unused")
-    @DatabaseField(generatedId = true)
-    private int id;
+public class Beer extends Model implements Serializable {
 
     @SuppressWarnings("unused")
     @DatabaseField
