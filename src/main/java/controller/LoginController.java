@@ -36,7 +36,9 @@ public class LoginController {
         }
 
         response.status(AccessService.login(request, username, password) ? 200 : 403);
-        return "";
+        User user = new User();
+        user.username = username;
+        return JsonService.toJson(user);
     };
 
     public static Route logout = (Request request, Response response) -> {
