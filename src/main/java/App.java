@@ -8,12 +8,23 @@ import static spark.Spark.*;
 
 public class App {
 
+    private static boolean isDevelop() {
+        String develop = System.getProperty("develop");
+        return develop != null && develop.toLowerCase().equals("true");
+    }
+
     public static void main(String[] args) throws SQLException {
+        boolean develop = App.isDevelop();
 
         // Init
         Database.init();
-        port(Integer.parseInt(System.getProperty("port")));
-        staticFiles.externalLocation(System.getProperty("staticFolder"));
+        if (develop) {
+            port(4567);
+            staticFiles.externalLocation(System.getProperty("staticFolder"));
+        } else {
+            port(80);
+            staticFiles.location(System.getProperty("staticFolder"));
+        }
 
         // Special services
         get("/api/login", LoginController.checkLogin);

@@ -26,7 +26,6 @@ task(main, dependsOn: jar, type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     systemProperties = [
             staticFolder: "/srv/iix.se-angular-frontend/app",
-            port: "80"
     ]
 }
 
