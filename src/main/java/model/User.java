@@ -9,7 +9,7 @@ public class User extends Model {
 
     @SuppressWarnings("unused")
     @DatabaseField
-    private String username;
+    public String username;
 
     @SuppressWarnings("unused")
     @DatabaseField

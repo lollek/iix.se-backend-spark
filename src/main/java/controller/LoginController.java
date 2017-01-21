@@ -1,6 +1,8 @@
 package controller;
 
 import com.google.gson.reflect.TypeToken;
+import model.User;
+import org.eclipse.jetty.http.HttpStatus;
 import service.AccessService;
 import service.JsonService;
 import spark.Request;
@@ -12,8 +14,15 @@ import java.util.Map;
 public class LoginController {
 
     public static Route checkLogin = (Request request, Response response) -> {
-        response.status(AccessService.isLoggedIn(request) ? 200 : 401);
-        return "";
+        String currentUser = AccessService.getUsername(request);
+        if (currentUser != null) {
+            User user = new User();
+            user.username = currentUser;
+            return JsonService.toJson(user);
+        } else {
+            response.status(HttpStatus.UNAUTHORIZED_401);
+            return "";
+        }
     };
 
     public static Route login = (Request request, Response response) -> {

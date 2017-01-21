@@ -10,7 +10,11 @@ import java.sql.SQLException;
 public class AccessService {
 
     public static boolean isLoggedIn(Request request) {
-        return request.session().attribute("username") != null;
+        return getUsername(request) != null;
+    }
+
+    public static String getUsername(Request request) {
+        return request.session().attribute("username");
     }
 
     public static boolean authenticate(Request request, String username, String password) {
