@@ -24,8 +24,5 @@ dependencies {
 task(main, dependsOn: jar, type: JavaExec) {
     main = 'App'
     classpath = sourceSets.main.runtimeClasspath
-    systemProperties = [
-            staticFolder: "/srv/iix.se-angular-frontend/app",
-    ]
 }
 
