@@ -44,6 +44,8 @@ public class App {
         put("/api/books/:id", BooksController.update);
         delete("/api/books/:id", BooksController.delete);
 
+        get("/api/games", GamesController.index);
+
         get("/api/markdown/:name", MarkdownTextsController.show);
         put("/api/markdown/:name", MarkdownTextsController.update);
 
