@@ -19,4 +19,8 @@ public class Book extends Model implements Serializable{
     @SuppressWarnings("unused")
     @DatabaseField
     private String other;
+
+    @SuppressWarnings("unused")
+    @DatabaseField
+    private String image;
 }
