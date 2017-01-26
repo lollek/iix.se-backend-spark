@@ -5,6 +5,7 @@ plugins {
 
 group 'se.iix.backend.spark'
 version '0.1'
+mainClassName = 'App'
 
 repositories {
     mavenCentral()
