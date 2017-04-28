@@ -22,7 +22,7 @@ public class Note extends Model implements Serializable {
     public String text;
 
     @SuppressWarnings("unused")
-    @DatabaseField(dataType = DataType.DATE_STRING, format = DATE_FORMAT)
+    @DatabaseField(format = DATE_FORMAT)
     public Date date;
 }
 

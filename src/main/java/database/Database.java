@@ -14,7 +14,7 @@ public class Database {
     private static ConnectionSource connectionSource;
 
     public static void init() throws SQLException {
-        connectionSource = new JdbcConnectionSource("jdbc:sqlite:db/production.sqlite3");
+        connectionSource = new JdbcConnectionSource("jdbc:postgresql://localhost:5432/iix-notes", "www-data", "www-data");
         DaoManager.createDao(connectionSource, Beer.class);
         DaoManager.createDao(connectionSource, Book.class);
         DaoManager.createDao(connectionSource, Group.class);
