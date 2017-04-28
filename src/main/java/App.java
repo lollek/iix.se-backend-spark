@@ -18,11 +18,11 @@ public class App {
 
         // Init
         Database.init();
+        ipAddress("127.0.0.1");
+        port(8001);
         if (develop) {
-            port(4567);
             staticFiles.externalLocation(System.getProperty("staticFolder"));
         } else {
-            port(80);
             staticFiles.location("/public");
         }
 
