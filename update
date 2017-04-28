@@ -1,10 +1,10 @@
 #! /usr/bin/env bash
 set -euo pipefail
 
-cd frontend
+cd ../iix.se-frontend-angular
 git ff
 npm run dist
-cd ..
+cd -
 
 git ff
 rm -rf build/distributions/*
