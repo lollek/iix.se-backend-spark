@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 set -euo pipefail
 
-cd ../iix.se-frontend-angular
+cd ../iix.se-frontend-angular2
 git ff
 npm run dist
 cd -
