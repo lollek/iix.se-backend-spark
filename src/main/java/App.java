@@ -30,6 +30,7 @@ public class App {
 
         LoginController.Companion.register("/api/login");
         BeersController.register("/api/beers");
+        GamesController.Companion.register("/api/games");
 
 
         get("/api/books", BooksController.index);
@@ -38,7 +39,6 @@ public class App {
         put("/api/books/:id", BooksController.update);
         delete("/api/books/:id", BooksController.delete);
 
-        get("/api/games", GamesController.index);
 
         get("/api/markdown/:name", MarkdownTextsController.show);
         put("/api/markdown/:name", MarkdownTextsController.update);

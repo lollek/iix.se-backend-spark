@@ -17,8 +17,7 @@ class LoginController {
             Spark.delete(endpointUrl, logout)
         }
 
-        @Suppress("UNUSED_PARAMETER")
-        private val checkLogin = fun(request: Request, response: Response): String? {
+        private val checkLogin = fun(request: Request, _: Response): String? {
             if (!AccessService.isLoggedIn(request)) {
                 throw UnauthorizedException()
             }
@@ -38,8 +37,7 @@ class LoginController {
             return JsonService.toJson(User(username))
         }
 
-        @Suppress("UNUSED_PARAMETER")
-        private val logout = fun(request: Request, response: Response): String? {
+        private val logout = fun(request: Request, _: Response): String? {
             AccessService.logout(request)
             return null
         }
