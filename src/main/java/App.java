@@ -1,5 +1,7 @@
 import controller.*;
 import database.Database;
+import exceptions.UnauthorizedException;
+import org.eclipse.jetty.http.HttpStatus;
 import service.LogService;
 
 import java.sql.SQLException;
@@ -26,17 +28,9 @@ public class App {
             staticFiles.location("/public");
         }
 
-        // Special services
-        get("/api/login", LoginController.checkLogin);
-        post("/api/login", LoginController.login);
-        delete("/api/login", LoginController.logout);
+        LoginController.Companion.register("/api/login");
+        BeersController.register("/api/beers");
 
-        // Resources
-        get("/api/beers", BeersController.index);
-        get("/api/beers/:id", BeersController.show);
-        post("/api/beers", BeersController.save);
-        put("/api/beers/:id", BeersController.update);
-        delete("/api/beers/:id", BeersController.delete);
 
         get("/api/books", BooksController.index);
         get("/api/books/:id", BooksController.show);
@@ -62,8 +56,11 @@ public class App {
 
         notFound("");
         internalServerError("");
+
         after((request, response) -> response.type("application/json"));
         after(LogService::logAccess);
+
+        exception(UnauthorizedException.class, ((exception, request, response) -> response.status(HttpStatus.UNAUTHORIZED_401)));
         exception(Exception.class, (exception, request, response) -> {
             LogService.logAccess(request, response);
             LogService.logException(exception);
