@@ -17,6 +17,11 @@ public class AccessService {
         return request.session().attribute("username");
     }
 
+    public static User getUser(Request request) {
+        final String username = getUsername(request);
+        return username != null ? new User(username) : null;
+    }
+
     public static boolean login(Request request, String username, String password) {
         Dao<User, Integer> dao = Database.getDao(User.class);
         User user = null;

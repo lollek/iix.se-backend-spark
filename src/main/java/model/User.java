@@ -7,6 +7,12 @@ import org.mindrot.jbcrypt.BCrypt;
 @DatabaseTable(tableName = "users")
 public class User extends Model {
 
+    public User() {}
+
+    public User(String username) {
+        this.username = username;
+    }
+
     @SuppressWarnings("unused")
     @DatabaseField
     public String username;
