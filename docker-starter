@@ -1,0 +1,19 @@
+#! /usr/bin/env bash
+set -euo pipefail
+
+die() {
+  echo $@
+  exit 1
+}
+
+[[ -z ${IP} ]] && die "Environment variable IP missing"
+[[ -z ${DBPATH} ]] && die "Environment variable DBPATH missing"
+[[ -z ${DBUSER} ]] && die "Environment variable DBUSER missing"
+[[ -z ${DBPASSWORD} ]] && die "Environment variable DBPASSWORD missing"
+
+export SPARK_BACKEND_OPTS="-Dip=${IP} \
+  -DdbPath=${DBPATH} \
+  -DdbUser=${DBUSER} \
+  -DdbPassword=${DBPASSWORD}"
+
+exec /app/bin/spark-backend

@@ -10,23 +10,10 @@ import static spark.Spark.*;
 
 public class App {
 
-    private static boolean isDevelop() {
-        String develop = System.getProperty("develop");
-        return develop != null && develop.toLowerCase().equals("true");
-    }
-
     public static void main(String[] args) throws SQLException {
-        boolean develop = App.isDevelop();
-
-        // Init
         Database.init();
-        ipAddress("127.0.0.1");
-        port(8001);
-        if (develop) {
-            staticFiles.externalLocation(System.getProperty("staticFolder"));
-        } else {
-            staticFiles.location("/public");
-        }
+        ipAddress(System.getProperty("ip"));
+        port(8002);
 
         LoginController.Companion.register("/api/login");
         BeersController.register("/api/beers");
@@ -50,7 +37,7 @@ public class App {
         delete("/api/notes/:id", NotesController.delete);
 
         get("*", ((request, response) -> {
-            response.redirect("/#!/404");
+            response.status(404);
             return "";
         }));
 
