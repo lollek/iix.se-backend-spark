@@ -11,7 +11,7 @@ import static spark.Spark.*;
 public class App {
 
     public static void main(String[] args) throws SQLException {
-        Database.init();
+        Database.Companion.init();
         ipAddress(System.getProperty("ip"));
         port(8002);
 

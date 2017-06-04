@@ -29,7 +29,8 @@ class LoginController {
             val username: String? = data["username"]?.toString()
             val password: String? = data["password"]?.toString()
 
-            if (username == null || username.isEmpty() || !AccessService.login(request, username, password)) {
+            if (username == null || username.isEmpty() ||
+                password == null || !AccessService.login(request, username, password)) {
                 response.status(403)
                 return  "Username or password is incorrect"
             }
@@ -39,7 +40,7 @@ class LoginController {
 
         private val logout = fun(request: Request, _: Response): String? {
             AccessService.logout(request)
-            return null
+            return ""
         }
     }
 }

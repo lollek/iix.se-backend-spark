@@ -21,12 +21,12 @@ abstract class ModelController {
         }
 
         @Throws(SQLException::class)
-        fun index(clazz: Class<*>): String? {
+        fun <T: Model> index(clazz: Class<T>): String? {
             return JsonService.toJson(Database.index(clazz))
         }
 
         @Throws(SQLException::class)
-        fun show(clazz: Class<*>, request: Request, response: Response): String? {
+        fun <T: Model> show(clazz: Class<T>, request: Request, response: Response): String? {
             val id: Int? = getId(request)
             if (id == null) {
                 response.status(HttpStatus.BAD_REQUEST_400)
