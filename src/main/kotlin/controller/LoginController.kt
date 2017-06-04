@@ -21,7 +21,8 @@ class LoginController {
             if (!AccessService.isLoggedIn(request)) {
                 throw UnauthorizedException()
             }
-            return JsonService.toJson(AccessService.getUser(request))
+            val user: User = AccessService.getUser(request) ?: return ""
+            return JsonService.toJson(user)
         }
 
         private val login = fun(request: Request, response: Response): String? {
