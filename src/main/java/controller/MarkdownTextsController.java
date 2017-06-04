@@ -36,7 +36,7 @@ public class MarkdownTextsController extends ModelController {
             return "";
         }
 
-        jsonObject.id = dbObject.id;
+        jsonObject.setId(dbObject.getId());
         if (!Database.update(MarkdownText.class, jsonObject)) {
             response.status(HttpStatus.BAD_REQUEST_400);
             return "";

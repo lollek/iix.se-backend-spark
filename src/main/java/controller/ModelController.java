@@ -63,7 +63,7 @@ abstract class ModelController {
             response.status(HttpStatus.BAD_REQUEST_400);
             return "";
         }
-        object.id = id;
+        object.setId(id);
 
         if (!Database.update(clazz, object)) {
             response.status(HttpStatus.BAD_REQUEST_400);
