@@ -15,26 +15,12 @@ public class App {
         ipAddress(System.getProperty("ip"));
         port(8002);
 
-        LoginController.Companion.register("/api/login");
-        BeersController.register("/api/beers");
+        BeersController.Companion.register("/api/beers");
+        BooksController.Companion.register("/api/books");
         GamesController.Companion.register("/api/games");
-
-
-        get("/api/books", BooksController.index);
-        get("/api/books/:id", BooksController.show);
-        post("/api/books", BooksController.save);
-        put("/api/books/:id", BooksController.update);
-        delete("/api/books/:id", BooksController.delete);
-
-
-        get("/api/markdown/:name", MarkdownTextsController.show);
-        put("/api/markdown/:name", MarkdownTextsController.update);
-
-        get("/api/notes", NotesController.index);
-        get("/api/notes/:id", NotesController.show);
-        post("/api/notes", NotesController.save);
-        put("/api/notes/:id", NotesController.update);
-        delete("/api/notes/:id", NotesController.delete);
+        LoginController.Companion.register("/api/login");
+        MarkdownTextsController.Companion.register("/api/markdown");
+        NotesController.Companion.register("api/notes");
 
         get("*", ((request, response) -> {
             response.status(404);
