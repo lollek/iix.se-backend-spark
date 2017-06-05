@@ -2,9 +2,11 @@ package controller
 
 import com.j256.ormlite.dao.Dao
 import database.Database
+import exceptions.HttpBadRequest
+import exceptions.HttpInternalServerError
+import exceptions.HttpUnauthorized
 import model.MarkdownText
 import org.apache.log4j.Logger
-import org.eclipse.jetty.http.HttpStatus
 import service.AccessService
 import service.JsonService
 import spark.Request
@@ -22,7 +24,7 @@ class MarkdownTextsController : ModelController() {
             Spark.put("$endpointUrl/:name", update)
         }
 
-        val show = fun(request: Request, response: Response): String? {
+        val show = fun(request: Request, _: Response): String {
             Database.getDao(MarkdownText::class.java)?.let { dao: Dao<MarkdownText?, Int> ->
                 try {
                     val query = dao.queryBuilder().where().eq("name", request.params("name")).prepare()
@@ -31,39 +33,33 @@ class MarkdownTextsController : ModelController() {
                     logger.error("Database query failed!", e)
                 }
             }
-            response.status(HttpStatus.INTERNAL_SERVER_ERROR_500)
-            return ""
+            throw HttpInternalServerError()
         }
 
-        val update = fun(request: Request, response: Response): String? {
+        val update = fun(request: Request, _: Response): String {
             if (!AccessService.isLoggedIn(request)) {
-                response.status(HttpStatus.UNAUTHORIZED_401)
-                return ""
+                throw HttpUnauthorized()
             }
 
             val dao: Dao<MarkdownText?, Int>? = Database.getDao(MarkdownText::class.java)
             if (dao == null) {
                 logger.error("Failed to get Dao!")
-                response.status(HttpStatus.INTERNAL_SERVER_ERROR_500)
-                return ""
+                throw HttpInternalServerError()
             }
 
-            val dbObject: MarkdownText? = dao.queryForFirst(dao.queryBuilder().where().eq("name", request.params("name")).prepare())
-            if (dbObject == null) {
-                response.status(HttpStatus.BAD_REQUEST_400)
-                return ""
+            val dbObject: MarkdownText
+            try {
+                val query = dao.queryBuilder().where().eq("name", request.params("name")).prepare()
+                dbObject = dao.queryForFirst(query) ?: throw HttpBadRequest("")
+            } catch (e: SQLException) {
+                logger.error("Database query failed!", e)
+                throw HttpInternalServerError()
             }
 
-            val jsonObject: MarkdownText? = JsonService.fromJson(request.body(), MarkdownText::class.java)
-            if (jsonObject == null) {
-                response.status(HttpStatus.BAD_REQUEST_400)
-                return ""
-            }
-
+            val jsonObject: MarkdownText = JsonService.fromJson(request.body(), MarkdownText::class.java) ?: throw HttpBadRequest("")
             jsonObject.id = dbObject.id
             if (!Database.update(MarkdownText::class.java, jsonObject)) {
-                response.status(HttpStatus.BAD_REQUEST_400)
-                return ""
+                throw HttpInternalServerError()
             }
 
             return JsonService.toJson(jsonObject)

@@ -3,12 +3,15 @@ package service
 import com.j256.ormlite.dao.Dao
 import database.Database
 import model.User
+import org.apache.log4j.Logger
 import spark.Request
 
 import java.sql.SQLException
 
 class AccessService {
     companion object {
+        val logger: Logger = Logger.getLogger(AccessService::class.java)
+
         fun isLoggedIn(request: Request): Boolean {
             return getUsername(request) != null
         }
@@ -29,7 +32,7 @@ class AccessService {
             try {
                 user = dao.queryForFirst(dao.queryBuilder().where().eq("username", username).prepare())
             } catch (e: SQLException) {
-                LogService.logException(e)
+                logger.error("Database lookup failed!", e)
                 return false
             }
 

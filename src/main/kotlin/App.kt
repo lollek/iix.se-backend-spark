@@ -1,6 +1,6 @@
 import controller.*
 import database.Database
-import exceptions.UnauthorizedException
+import exceptions.*
 import org.eclipse.jetty.http.HttpStatus
 import service.LogService
 import spark.Request
@@ -27,24 +27,34 @@ class App {
             MarkdownTextsController.register("/api/markdown")
             NotesController.register("api/notes")
 
-            Spark.get("*", fun(_: Request, response: Response): String? {
-                response.status(404)
-                return ""
+            Spark.connect("*", fun(_:Request, _: Response) { throw HttpNotFound() })
+            Spark.delete("*", fun(_:Request, _: Response) { throw HttpNotFound() })
+            Spark.get("*", fun(_:Request, _: Response) { throw HttpNotFound() })
+            Spark.head("*", fun(_:Request, _: Response) { throw HttpNotFound() })
+            Spark.options("*", fun(_:Request, _: Response) { throw HttpNotFound() })
+            Spark.patch("*", fun(_:Request, _: Response) { throw HttpNotFound() })
+            Spark.post("*", fun(_:Request, _: Response) { throw HttpNotFound() })
+            Spark.put("*", fun(_:Request, _: Response) { throw HttpNotFound() })
+            Spark.trace("*", fun(_:Request, _: Response) { throw HttpNotFound() })
+
+            Spark.exception(HttpStatusException::class.java, fun(exception: Exception, request: Request, response: Response) {
+                (exception as HttpStatusException).let {
+                    response.status(exception.httpStatus)
+                    response.body(exception.message)
+                }
+                LogService.logAccess(request, response)
             })
-
-            Spark.notFound("")
-            Spark.internalServerError("")
-
+            Spark.exception(Exception::class.java, fun(exception: Exception, request: Request, response: Response) {
+                response.status(HttpStatus.INTERNAL_SERVER_ERROR_500)
+                response.body("")
+                LogService.logException(exception)
+                LogService.logAccess(request, response)
+            })
             Spark.after("*", fun(_: Request, response: Response) {
                 response.type("application/json")
             })
-            Spark.after("*", fun(request: Request, response: Response) = LogService.Companion.logAccess(request, response))
+            Spark.after("*", fun(request: Request, response: Response) = LogService.logAccess(request, response))
 
-            Spark.exception(UnauthorizedException::class.java, fun(_: Exception, _: Request, response: Response) = response.status(HttpStatus.UNAUTHORIZED_401))
-            Spark.exception(Exception::class.java, fun(exception: Exception, request: Request, response: Response) {
-                LogService.logAccess(request, response)
-                LogService.logException(exception)
-            })
         }
     }
 }

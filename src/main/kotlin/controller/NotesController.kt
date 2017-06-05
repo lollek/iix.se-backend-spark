@@ -18,10 +18,10 @@ class NotesController : ModelController() {
             Spark.delete("$endpointUrl/:id", delete)
         }
 
-        val index = fun(_: Request, _: Response) = JsonService.toJson(Database.index(Note::class.java, "id", "title", "date"))
-        val show = fun (request: Request, response: Response) = show(Note::class.java, request, response)
-        val save = fun (request: Request, response: Response) = save(Note::class.java, request, response)
-        val update = fun (request: Request, response: Response) = update(Note::class.java, request, response)
-        val delete = fun (request: Request, response: Response) = delete(Note::class.java, request, response)
+        val index = fun(_: Request, _: Response): String = JsonService.toJson(Database.index(Note::class.java, "id", "title", "date"))
+        val show = fun (request: Request, response: Response): String = show(Note::class.java, request, response)
+        val save = fun (request: Request, response: Response): String = save(Note::class.java, request, response)
+        val update = fun (request: Request, response: Response): String = update(Note::class.java, request, response)
+        val delete = fun (request: Request, response: Response): String = delete(Note::class.java, request, response)
     }
 }

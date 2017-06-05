@@ -1,12 +1,15 @@
 package service
 
 import model.Game
+import org.apache.log4j.Logger
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.*
 
 class SteamWishlistService {
     companion object {
+        private val logger: Logger = Logger.getLogger(SteamWishlistService::class.java)
+
         private fun gameFromRow(row: Element): Game {
             val image: String = row
                     .select("div.gameListRowLogo").first()
@@ -34,7 +37,7 @@ class SteamWishlistService {
                         .select("div#wishlist_items > div.wishlistRow")
                         .map { gameFromRow(it) }
             } catch (e: Exception) {
-                LogService.logException(e)
+                logger.error("Failed to parse wishlist", e)
                 return ArrayList()
             }
         }

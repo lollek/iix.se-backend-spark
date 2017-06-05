@@ -16,10 +16,10 @@ class BeersController : ModelController() {
             Spark.delete("$endpointUrl/:id", delete)
         }
 
-        val index = fun(_: Request, _: Response) = index(Beer::class.java)
-        val show = fun(request: Request, response: Response) = show(Beer::class.java, request, response)
-        val save = fun(request: Request, response: Response) = save(Beer::class.java, request, response)
-        val update = fun(request: Request, response: Response) = update(Beer::class.java, request, response)
-        val delete = fun(request: Request, response: Response) = delete(Beer::class.java, request, response)
+        val index = fun(_: Request, _: Response): String = index(Beer::class.java)
+        val show = fun(request: Request, response: Response): String = show(Beer::class.java, request, response)
+        val save = fun(request: Request, response: Response): String = save(Beer::class.java, request, response)
+        val update = fun(request: Request, response: Response): String = update(Beer::class.java, request, response)
+        val delete = fun(request: Request, response: Response): String = delete(Beer::class.java, request, response)
     }
 }

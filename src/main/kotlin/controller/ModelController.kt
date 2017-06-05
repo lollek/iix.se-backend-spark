@@ -1,6 +1,9 @@
 package controller
 
 import database.Database
+import exceptions.HttpBadRequest
+import exceptions.HttpInternalServerError
+import exceptions.HttpUnauthorized
 import model.Model
 import org.eclipse.jetty.http.HttpStatus
 import service.AccessService
@@ -18,74 +21,54 @@ abstract class ModelController {
             }
         }
 
-        fun <T: Model> index(clazz: Class<T>): String? {
+        fun <T: Model> index(clazz: Class<T>): String {
             return JsonService.toJson(Database.index(clazz))
         }
 
-        fun <T: Model> show(clazz: Class<T>, request: Request, response: Response): String? {
-            val id: Int? = getId(request)
-            if (id == null) {
-                response.status(HttpStatus.BAD_REQUEST_400)
-                return ""
-            }
+        @Suppress("UNUSED_PARAMETER")
+        fun <T: Model> show(clazz: Class<T>, request: Request, response: Response): String {
+            val id: Int = getId(request) ?: throw HttpBadRequest("")
             return JsonService.toJson(Database.show(clazz, id))
         }
 
-        fun <T: Model> save(clazz: Class<T>, request: Request, response: Response): String? {
+        @Suppress("UNUSED_PARAMETER")
+        fun <T: Model> save(clazz: Class<T>, request: Request, response: Response): String {
             if (!AccessService.isLoggedIn(request)) {
-                response.status(HttpStatus.UNAUTHORIZED_401)
-                return ""
+                throw HttpUnauthorized()
             }
 
             val obj: T? = JsonService.fromJson(request.body(), clazz)
             if (obj == null || !Database.save(clazz, obj)) {
-                response.status(HttpStatus.BAD_REQUEST_400)
-                return ""
+                throw HttpBadRequest("")
             }
             return JsonService.toJson(obj)
         }
 
-        fun <T : Model> update(clazz: Class<T>, request: Request, response: Response): String? {
+        @Suppress("UNUSED_PARAMETER")
+        fun <T : Model> update(clazz: Class<T>, request: Request, response: Response): String {
             if (!AccessService.isLoggedIn(request)) {
-                response.status(HttpStatus.UNAUTHORIZED_401)
-                return ""
+                throw HttpUnauthorized()
             }
 
-            val id: Int? = getId(request)
-            if (id == null) {
-                response.status(HttpStatus.BAD_REQUEST_400)
-                return ""
-            }
-
-            val obj: T? = JsonService.fromJson(request.body(), clazz)
-            if (obj == null) {
-                response.status(HttpStatus.BAD_REQUEST_400)
-                return ""
-            }
+            val id: Int = getId(request) ?: throw HttpBadRequest("")
+            val obj: T = JsonService.fromJson(request.body(), clazz) ?: throw HttpBadRequest("")
             obj.id = id
 
             if (!Database.update(clazz, obj)) {
-                response.status(HttpStatus.BAD_REQUEST_400)
-                return ""
+                throw HttpInternalServerError()
             }
             return JsonService.toJson(obj)
         }
 
-        fun <T : Model> delete(clazz: Class<T>, request: Request, response: Response): String? {
+        fun <T : Model> delete(clazz: Class<T>, request: Request, response: Response): String {
             if (!AccessService.isLoggedIn(request)) {
-                response.status(HttpStatus.UNAUTHORIZED_401)
-                return ""
+                throw HttpUnauthorized()
             }
 
-            val id: Int? = getId(request)
-            if (id == null) {
-                response.status(HttpStatus.BAD_REQUEST_400)
-                return ""
-            }
+            val id: Int = getId(request) ?: throw HttpBadRequest("")
 
             if (!Database.delete(clazz, id)) {
-                response.status(HttpStatus.BAD_REQUEST_400)
-                return ""
+                throw HttpInternalServerError()
             }
 
             response.status(HttpStatus.NO_CONTENT_204)
