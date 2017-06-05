@@ -78,7 +78,7 @@ class Database {
         fun <T: Model> update(clazz: Class<T>, obj: T): Boolean {
             getDao(clazz)?.let { dao: Dao<T?, Int> ->
                 try {
-                    dao.update(obj) > 0
+                    return dao.update(obj) > 0
                 } catch (e: SQLException) {
                     logger.error("Database update failed!", e)
                 }
