@@ -8,8 +8,6 @@ import service.JsonService
 import spark.Request
 import spark.Response
 
-import java.sql.SQLException
-
 abstract class ModelController {
     companion object {
         private fun getId(request: Request): Int? {
@@ -20,12 +18,10 @@ abstract class ModelController {
             }
         }
 
-        @Throws(SQLException::class)
         fun <T: Model> index(clazz: Class<T>): String? {
             return JsonService.toJson(Database.index(clazz))
         }
 
-        @Throws(SQLException::class)
         fun <T: Model> show(clazz: Class<T>, request: Request, response: Response): String? {
             val id: Int? = getId(request)
             if (id == null) {

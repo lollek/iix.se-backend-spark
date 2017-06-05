@@ -23,7 +23,7 @@ class AccessService {
         }
 
         fun login(request: Request, username: String, password: String): Boolean {
-            val dao: Dao<User?, Int> = Database.getDao(User::class.java)
+            val dao: Dao<User?, Int> = Database.getDao(User::class.java) ?: return false
 
             val user: User?
             try {
