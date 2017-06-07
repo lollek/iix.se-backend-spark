@@ -12,7 +12,6 @@ import java.sql.SQLException
 
 class Database {
     companion object {
-        private val logger: Logger = Logger.getLogger(Database::class.java)
         private var connectionSource: ConnectionSource? = null
 
         @Throws(SQLException::class)
@@ -33,21 +32,15 @@ class Database {
 
         fun <T: Model> getDao(clazz: Class<T>): Dao<T?, Int>? = DaoManager.lookupDao(connectionSource, clazz)
 
-        fun <T: Model> index(clazz: Class<T>): MutableList<T?>? {
-            try {
-                return getDao(clazz)?.queryForAll()
-            } catch (e: SQLException) {
-                logger.error("Database query failed!", e)
-            }
-            return null
-        }
-
-        fun <T: Model> index(clazz: Class<T>, vararg columns: String): MutableList<T?>? {
+        inline fun <reified T: Model> index(clazz: Class<T>, vararg columns: String): List<T>? {
             getDao(clazz)?.let { dao: Dao<T?, Int> ->
                 try {
-                    return dao.query(dao.queryBuilder().selectColumns(*columns).prepare())
+                    return when {
+                        columns.isNotEmpty() -> dao.query(dao.queryBuilder().selectColumns(*columns).prepare())
+                        else -> getDao(clazz)?.queryForAll()
+                    }?.filterIsInstance<T>()
                 } catch (e: SQLException) {
-                    logger.error("Database query failed!", e)
+                    Logger.getLogger(Database::class.java).error("Database query failed!", e)
                 }
             }
             return null
@@ -58,7 +51,7 @@ class Database {
                 try {
                     return dao.queryForFirst(dao.queryBuilder().where().idEq(id).prepare())
                 } catch (e: SQLException) {
-                    logger.error("Database query failed!", e)
+                    Logger.getLogger(Database::class.java).error("Database query failed!", e)
                 }
             }
             return null
@@ -69,7 +62,7 @@ class Database {
                 try {
                     return dao.create(obj) > 0
                 } catch (e: SQLException) {
-                    logger.error("Database update failed!", e)
+                    Logger.getLogger(Database::class.java).error("Database update failed!", e)
                 }
             }
             return false
@@ -80,7 +73,7 @@ class Database {
                 try {
                     return dao.update(obj) > 0
                 } catch (e: SQLException) {
-                    logger.error("Database update failed!", e)
+                    Logger.getLogger(Database::class.java).error("Database update failed!", e)
                 }
             }
             return false
@@ -93,7 +86,7 @@ class Database {
                     deleteBuilder.delete()
                     return true
                 } catch (e: SQLException) {
-                    logger.error("Database delete failed!", e)
+                    Logger.getLogger(Database::class.java).error("Database delete failed!", e)
                 }
             }
             return false

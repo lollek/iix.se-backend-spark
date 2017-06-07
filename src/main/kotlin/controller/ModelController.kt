@@ -3,6 +3,7 @@ package controller
 import database.Database
 import exceptions.HttpBadRequest
 import exceptions.HttpInternalServerError
+import exceptions.HttpNotFound
 import exceptions.HttpUnauthorized
 import model.Model
 import org.eclipse.jetty.http.HttpStatus
@@ -13,26 +14,25 @@ import spark.Response
 
 abstract class ModelController {
     companion object {
-        private fun getId(request: Request): Int? {
+        private fun getId(request: Request): Int {
             try {
                 return Integer.parseInt(request.params("id"))
             } catch (_: NumberFormatException) {
-                return null
+                throw HttpBadRequest("")
             }
         }
 
-        fun <T: Model> index(clazz: Class<T>): String {
-            return JsonService.toJson(Database.index(clazz))
+        inline fun <reified T: Model> index(clazz: Class<T>, vararg columns: String): List<T> {
+            return Database.index(clazz, *columns) ?: listOf<T>()
         }
 
         @Suppress("UNUSED_PARAMETER")
-        fun <T: Model> show(clazz: Class<T>, request: Request, response: Response): String {
-            val id: Int = getId(request) ?: throw HttpBadRequest("")
-            return JsonService.toJson(Database.show(clazz, id))
+        fun <T: Model> show(clazz: Class<T>, request: Request, response: Response): T {
+            return Database.show(clazz, getId(request)) ?: throw HttpNotFound()
         }
 
         @Suppress("UNUSED_PARAMETER")
-        fun <T: Model> save(clazz: Class<T>, request: Request, response: Response): String {
+        fun <T: Model> save(clazz: Class<T>, request: Request, response: Response): T {
             if (!AccessService.isLoggedIn(request)) {
                 throw HttpUnauthorized()
             }
@@ -41,23 +41,22 @@ abstract class ModelController {
             if (obj == null || !Database.save(clazz, obj)) {
                 throw HttpBadRequest("")
             }
-            return JsonService.toJson(obj)
+            return obj
         }
 
         @Suppress("UNUSED_PARAMETER")
-        fun <T : Model> update(clazz: Class<T>, request: Request, response: Response): String {
+        fun <T : Model> update(clazz: Class<T>, request: Request, response: Response): T {
             if (!AccessService.isLoggedIn(request)) {
                 throw HttpUnauthorized()
             }
 
-            val id: Int = getId(request) ?: throw HttpBadRequest("")
             val obj: T = JsonService.fromJson(request.body(), clazz) ?: throw HttpBadRequest("")
-            obj.id = id
+            obj.id = getId(request)
 
             if (!Database.update(clazz, obj)) {
                 throw HttpInternalServerError()
             }
-            return JsonService.toJson(obj)
+            return obj
         }
 
         fun <T : Model> delete(clazz: Class<T>, request: Request, response: Response): String {
@@ -65,9 +64,7 @@ abstract class ModelController {
                 throw HttpUnauthorized()
             }
 
-            val id: Int = getId(request) ?: throw HttpBadRequest("")
-
-            if (!Database.delete(clazz, id)) {
+            if (!Database.delete(clazz, getId(request))) {
                 throw HttpInternalServerError()
             }
 
