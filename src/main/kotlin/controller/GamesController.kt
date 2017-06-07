@@ -8,29 +8,25 @@ import spark.Response
 import spark.Spark
 
 import java.time.LocalDateTime
-import java.util.*
 
 class GamesController {
     companion object {
+
         fun register(endpointUrl: String) {
-            Spark.get(endpointUrl, index)
+            Spark.get(endpointUrl, index, JsonService.gson::toJson)
         }
 
         private var gameListUpdate: LocalDateTime? = null
-        private var gameList: List<Game> = ArrayList()
-            get() {
-                if (gameListUpdate == null || gameListUpdate?.isBefore(LocalDateTime.now().minusHours(1)) ?: true) {
-                    field = SteamWishlistService.getWishlist("loll3k")
+        private var gameList: List<Game> = listOf()
+
+        val index = fun(_: Request, _: Response): List<Game> {
+            synchronized(this) {
+                if (gameListUpdate?.isBefore(LocalDateTime.now().minusHours(1)) ?: true) {
+                    gameList = SteamWishlistService.getWishlist("loll3k")
                     gameListUpdate = LocalDateTime.now()
                 }
-                return field
             }
-
-        val index = fun(_: Request, _: Response): String {
-             return JsonService.toJson(gameList)
+            return gameList
         }
-
     }
-
-
 }
