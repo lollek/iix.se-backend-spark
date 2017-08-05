@@ -21,16 +21,9 @@ class Database {
                     System.getProperty("dbUser"),
                     System.getProperty("dbPassword")
             )
-
-            DaoManager.createDao(connectionSource, Beer::class.java)
-            DaoManager.createDao(connectionSource, Book::class.java)
-            DaoManager.createDao(connectionSource, Group::class.java)
-            DaoManager.createDao(connectionSource, MarkdownText::class.java)
-            DaoManager.createDao(connectionSource, Note::class.java)
-            DaoManager.createDao(connectionSource, User::class.java)
         }
 
-        fun <T: Model> getDao(clazz: Class<T>): Dao<T?, Int>? = DaoManager.lookupDao(connectionSource, clazz)
+        fun <T: Model> getDao(clazz: Class<T>): Dao<T?, Int>? = DaoManager.createDao(connectionSource, clazz)
 
         inline fun <reified T: Model> index(clazz: Class<T>, vararg columns: String): List<T>? {
             getDao(clazz)?.let { dao: Dao<T?, Int> ->
