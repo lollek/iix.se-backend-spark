@@ -10,10 +10,12 @@ die() {
 [[ -z ${DBPATH} ]] && die "Environment variable DBPATH missing"
 [[ -z ${DBUSER} ]] && die "Environment variable DBUSER missing"
 [[ -z ${DBPASSWORD} ]] && die "Environment variable DBPASSWORD missing"
+[[ -z ${DBPASSWORD} ]] && die "Environment variable GOODREADS_KEY missing"
 
 export SPARK_BACKEND_OPTS="-Dip=${IP} \
   -DdbPath=${DBPATH} \
   -DdbUser=${DBUSER} \
-  -DdbPassword=${DBPASSWORD}"
+  -DdbPassword=${DBPASSWORD} \
+  -DgoodreadsApiKey=${GOODREADS_KEY}"
 
 exec /app/bin/spark-backend
