@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+set -euo pipefail
+
+rm -rf build/distributions/*
+./gradlew distTar
+
+sudo docker build -t loll3k/spark-backend .
