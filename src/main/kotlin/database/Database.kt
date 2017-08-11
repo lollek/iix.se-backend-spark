@@ -6,7 +6,6 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource
 import com.j256.ormlite.stmt.DeleteBuilder
 import com.j256.ormlite.support.ConnectionSource
 import model.*
-import org.apache.log4j.Logger
 
 import java.sql.SQLException
 
@@ -26,63 +25,30 @@ class Database {
         fun <T: Model> getDao(clazz: Class<T>): Dao<T?, Int>? = DaoManager.createDao(connectionSource, clazz)
 
         inline fun <reified T: Model> index(clazz: Class<T>, vararg columns: String): List<T>? {
-            getDao(clazz)?.let { dao: Dao<T?, Int> ->
-                try {
-                    return when {
-                        columns.isNotEmpty() -> dao.query(dao.queryBuilder().selectColumns(*columns).prepare())
-                        else -> getDao(clazz)?.queryForAll()
-                    }?.filterIsInstance<T>()
-                } catch (e: SQLException) {
-                    Logger.getLogger(Database::class.java).error("Database query failed!", e)
-                }
-            }
-            return null
+            val dao: Dao<T?, Int> = getDao(clazz)!!
+            return when {
+                columns.isNotEmpty() -> dao.query(dao.queryBuilder().selectColumns(*columns).prepare())
+                else -> dao.queryForAll()
+            }?.filterIsInstance<T>()
         }
 
         fun <T: Model> show(clazz: Class<T>, id: Int): T? {
-            getDao(clazz)?.let { dao: Dao<T?, Int> ->
-                try {
-                    return dao.queryForFirst(dao.queryBuilder().where().idEq(id).prepare())
-                } catch (e: SQLException) {
-                    Logger.getLogger(Database::class.java).error("Database query failed!", e)
-                }
-            }
-            return null
+            val dao: Dao<T?, Int> = getDao(clazz)!!
+            return dao.queryForFirst(dao.queryBuilder().where().idEq(id).prepare())
         }
 
         fun <T: Model> save(clazz: Class<T>, obj: T): Boolean {
-            getDao(clazz)?.let { dao: Dao<T?, Int> ->
-                try {
-                    return dao.create(obj) > 0
-                } catch (e: SQLException) {
-                    Logger.getLogger(Database::class.java).error("Database update failed!", e)
-                }
-            }
-            return false
+            return getDao(clazz)!!.create(obj) > 0
         }
 
         fun <T: Model> update(clazz: Class<T>, obj: T): Boolean {
-            getDao(clazz)?.let { dao: Dao<T?, Int> ->
-                try {
-                    return dao.update(obj) > 0
-                } catch (e: SQLException) {
-                    Logger.getLogger(Database::class.java).error("Database update failed!", e)
-                }
-            }
-            return false
+            return getDao(clazz)!!.update(obj) > 0
         }
 
         fun <T: Model> delete(clazz: Class <T>, id: Int): Boolean {
-            getDao(clazz)?.deleteBuilder()?.let { deleteBuilder: DeleteBuilder<T?, Int> ->
-                try {
-                    deleteBuilder.where().idEq(id)
-                    deleteBuilder.delete()
-                    return true
-                } catch (e: SQLException) {
-                    Logger.getLogger(Database::class.java).error("Database delete failed!", e)
-                }
-            }
-            return false
+            val deleteBuilder: DeleteBuilder<T?, Int> = getDao(clazz)!!.deleteBuilder()
+            deleteBuilder.where().idEq(id)
+            return deleteBuilder.delete() > 0
         }
     }
 }
