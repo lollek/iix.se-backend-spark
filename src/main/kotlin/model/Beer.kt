@@ -12,6 +12,7 @@ class Beer : Model(), Serializable {
     @DatabaseField var percentage: Double? = null
     @DatabaseField var country: String? = null
     @DatabaseField var style: String? = null
+    @DatabaseField var comment: String? = null
     @DatabaseField var sscore: Double? = null
     @DatabaseField var oscore: Double? = null
 }
