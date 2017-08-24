@@ -1,7 +1,6 @@
 package service
 
 import model.Book
-import org.apache.log4j.Logger
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.NodeList
@@ -11,7 +10,6 @@ import javax.xml.parsers.DocumentBuilderFactory
 
 class GoodreadsService {
     companion object {
-        private val logger: Logger = Logger.getLogger(GoodreadsService::class.java)
         private val goodreadsUrl: String = "https://www.goodreads.com"
         private val apiKey: String = System.getProperty("goodreadsApiKey")
 
@@ -22,24 +20,23 @@ class GoodreadsService {
             xmlData.normalizeDocument()
 
             val reviews: NodeList = xmlData.getElementsByTagName("review")
-            return 0.until(reviews.length).map { reviewIndex: Int ->
-                val review: Element = reviews.item(reviewIndex) as Element
-                val books: NodeList = review.getElementsByTagName("book")
-                0.until(books.length).map { bookIndex: Int ->
-                    val book: Element = books.item(bookIndex) as Element
+            return 0.until(reviews.length)
+                    .map { reviews.item(it) as Element }
+                    .filter { review: Element -> review.getElementsByTagName("owned").item(0).textContent != "1" }
+                    .map { review: Element ->
+                        val books: NodeList = review.getElementsByTagName("book")
+                        0.until(books.length)
+                         .map { books.item(it) as Element }
+                         .map { book: Element ->
+                             Book(
+                                 book.getElementsByTagName("title").item(0).textContent,
+                                 book.getElementsByTagName("name").item(0).textContent,
+                                 null,
+                                 book.getElementsByTagName("image_url").item(0).textContent
+                             )
 
-                    val owned : Boolean = review.getElementsByTagName("owned").item(0).textContent == "1"
-                    if (owned) {
-                        null
-                    } else {
-                        val title: String = book.getElementsByTagName("title").item(0).textContent
-                        val author: String = book.getElementsByTagName("name").item(0).textContent
-                        val image: String = book.getElementsByTagName("image_url").item(0).textContent
-                        Book(title, author, null, image)
-                    }
-
-                }
-            }.flatten().filterNotNull()
+                         }
+                    }.flatten()
         }
     }
 }
