@@ -1,9 +1,11 @@
 package model
 
-import com.j256.ormlite.field.DatabaseField
-import com.j256.ormlite.table.DatabaseTable
+import javax.persistence.Column
 
-@DatabaseTable(tableName = "groups")
 class Group : Model() {
-    @DatabaseField var name: String? = null
+    @Column(name="NAME") var name: String? = null
+
+    override fun save() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

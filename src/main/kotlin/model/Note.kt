@@ -1,19 +1,51 @@
 package model
 
-import com.j256.ormlite.field.DatabaseField
-import com.j256.ormlite.table.DatabaseTable
-
+import org.jooq.DSLContext
+import org.jooq.generated.tables.Notes.NOTES
 import java.io.Serializable
-import java.util.Date
+import java.sql.Date
+import javax.persistence.Column
 
-@DatabaseTable(tableName = "notes")
 class Note : Model(), Serializable {
-    companion object {
-        const val DATE_FORMAT: String = "yyyy-MM-dd"
+    @Column(name="TITLE") var title: String? = null
+    @Column(name="TEXT") var text: String? = null
+    @Column(name="DATE") var date: Date? = null
+
+    override fun save() {
+        database.Database.execute { context: DSLContext ->
+            if (id == null) {
+                context.insertInto(NOTES, NOTES.TITLE, NOTES.TEXT, NOTES.DATE)
+                        .values(title, text, date)
+                        .execute()
+            } else {
+                context.update(NOTES)
+                       .set(NOTES.TITLE, title)
+                       .set(NOTES.TEXT, text)
+                       .set(NOTES.DATE, date)
+                       .where(NOTES.ID.eq(id))
+                       .execute()
+            }
+        }
     }
 
-    @DatabaseField var title: String? = null
-    @DatabaseField var text: String? = null
-    @DatabaseField(format = DATE_FORMAT) var date: Date? = null
+    companion object {
+        fun loadAllAsRef(): List<Note> {
+            return database.Database.queryAll { context: DSLContext ->
+                context.select(NOTES.ID, NOTES.TITLE, NOTES.DATE)
+                        .from(NOTES)
+                        .fetchInto(Note::class.java)
+            }
+        }
+        fun loadById(id: Int): Note? {
+            return database.Database.query { context: DSLContext ->
+                context.select()
+                        .from(NOTES)
+                        .where(NOTES.ID.eq(id))
+                        .fetchAnyInto(Note::class.java)
+            }
+        }
+        fun deleteById(id: Int) = Model.deleteById(id, NOTES, NOTES.ID)
+    }
+
 }
 

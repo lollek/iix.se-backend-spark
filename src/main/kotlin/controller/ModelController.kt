@@ -1,9 +1,6 @@
 package controller
 
-import database.Database
 import exceptions.HttpBadRequest
-import exceptions.HttpInternalServerError
-import exceptions.HttpNotFound
 import exceptions.HttpUnauthorized
 import model.Model
 import org.eclipse.jetty.http.HttpStatus
@@ -14,21 +11,14 @@ import spark.Response
 
 abstract class ModelController {
     companion object {
-        private fun getId(request: Request): Int {
+
+        @JvmStatic
+        protected fun getId(request: Request): Int {
             try {
                 return Integer.parseInt(request.params("id"))
             } catch (_: NumberFormatException) {
                 throw HttpBadRequest("")
             }
-        }
-
-        inline fun <reified T: Model> index(clazz: Class<T>, vararg columns: String): List<T> {
-            return Database.index(clazz, *columns) ?: listOf<T>()
-        }
-
-        @Suppress("UNUSED_PARAMETER")
-        fun <T: Model> show(clazz: Class<T>, request: Request, response: Response): T {
-            return Database.show(clazz, getId(request)) ?: throw HttpNotFound()
         }
 
         @Suppress("UNUSED_PARAMETER")
@@ -37,10 +27,11 @@ abstract class ModelController {
                 throw HttpUnauthorized()
             }
 
-            val obj: T? = JsonService.fromJson(request.body(), clazz)
-            if (obj == null || !Database.save(clazz, obj)) {
-                throw HttpBadRequest("")
+            val obj: T = JsonService.fromJson(request.body(), clazz) ?: throw HttpBadRequest("")
+            if (obj.id != null) {
+                throw HttpBadRequest("Id found when not expected")
             }
+            obj.save()
             return obj
         }
 
@@ -52,21 +43,16 @@ abstract class ModelController {
 
             val obj: T = JsonService.fromJson(request.body(), clazz) ?: throw HttpBadRequest("")
             obj.id = getId(request)
-
-            if (!Database.update(clazz, obj)) {
-                throw HttpInternalServerError()
-            }
+            obj.save()
             return obj
         }
 
-        fun <T : Model> delete(clazz: Class<T>, request: Request, response: Response): String {
+        fun delete(request: Request, response: Response, deleteFn: () -> Unit): String {
             if (!AccessService.isLoggedIn(request)) {
                 throw HttpUnauthorized()
             }
 
-            if (!Database.delete(clazz, getId(request))) {
-                throw HttpInternalServerError()
-            }
+            deleteFn()
 
             response.status(HttpStatus.NO_CONTENT_204)
             return ""

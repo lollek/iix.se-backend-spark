@@ -1,5 +1,4 @@
 import controller.*
-import database.Database
 import exceptions.*
 import org.eclipse.jetty.http.HttpStatus
 import service.LogService
@@ -16,7 +15,6 @@ class App {
         @JvmStatic
         @Throws(SQLException::class)
         fun main(vararg args: String) {
-            Database.init()
             Spark.ipAddress(System.getProperty("ip"))
             Spark.port(8002)
 

@@ -1,20 +1,35 @@
 package model
 
-import com.j256.ormlite.field.DatabaseField
-import com.j256.ormlite.table.DatabaseTable
+import org.jooq.DSLContext
+import org.jooq.generated.tables.Users.USERS
 import org.mindrot.jbcrypt.BCrypt
+import javax.persistence.Column
 
-@DatabaseTable(tableName = "users")
 class User() : Model() {
-    @DatabaseField var username: String? = null
-    @DatabaseField var password: String? = null
-    @DatabaseField var salt: String? = null
+    @Column(name="USERNAME") var username: String? = null
+    @Column(name="PASSWORD") var password: String? = null
+    @Column(name="SALT") var salt: String? = null
 
     constructor(username: String) : this() {
         this.username = username
     }
 
+    override fun save() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     fun auth(password: String): Boolean {
         return this.password != null && BCrypt.checkpw(password, this.password)
+    }
+
+    companion object {
+        fun loadByUsername(username: String): User? {
+            return database.Database.query { context: DSLContext ->
+                context.select()
+                       .from(USERS)
+                       .where(USERS.USERNAME.eq(username))
+                       .fetchAnyInto(User::class.java)
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 package controller
 
+import exceptions.HttpNotFound
 import model.Note
 import service.JsonService
 import spark.Request
@@ -17,10 +18,10 @@ class NotesController : ModelController() {
             Spark.delete("$endpointUrl/:id", delete, JsonService.gson::toJson)
         }
 
-        val index = fun(_: Request, _: Response): List<Note> = index(Note::class.java, "id", "title", "date")
-        val show = fun (request: Request, response: Response): Note = show(Note::class.java, request, response)
-        val save = fun (request: Request, response: Response): Note = save(Note::class.java, request, response)
-        val update = fun (request: Request, response: Response): Note = update(Note::class.java, request, response)
-        val delete = fun (request: Request, response: Response): String = delete(Note::class.java, request, response)
+        val index = fun(_: Request, _: Response): List<Note> = Note.loadAllAsRef()
+        val show = fun(request: Request, _: Response): Note = Note.loadById(getId(request)) ?: throw HttpNotFound()
+        val save = fun(request: Request, response: Response): Note = save(Note::class.java, request, response)
+        val update = fun(request: Request, response: Response): Note = update(Note::class.java, request, response)
+        val delete = fun(request: Request, response: Response): String = delete(request, response, fun() = Note.deleteById(getId(request)))
     }
 }
