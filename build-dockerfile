@@ -2,6 +2,7 @@
 set -euo pipefail
 
 rm -rf build/distributions/*
+./gradlew generateIixJooqSchemaSource
 ./gradlew distTar
 
 sudo docker build -t loll3k/spark-backend .
