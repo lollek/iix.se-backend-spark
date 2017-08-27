@@ -1,39 +1,31 @@
 package model
 
 import org.jooq.DSLContext
-import org.jooq.generated.tables.Beers.BEERS
+import org.jooq.generated.tables.Beverages.BEVERAGES
 import java.io.Serializable
-import javax.persistence.Column
 
-class Beer : Model(), Serializable {
-    @Column(name="NAME") var name: String? = null
-    @Column(name="BREWERY") var brewery: String? = null
-    @Column(name="PERCENTAGE") var percentage: Double? = null
-    @Column(name="COUNTRY") var country: String? = null
-    @Column(name="STYLE") var style: String? = null
-    @Column(name="COMMENT") var comment: String? = null
-    @Column(name="SSCORE") var sscore: Double? = null
-    @Column(name="OSCORE") var oscore: Double? = null
+class Beer : Beverage(), Serializable {
 
     override fun save() {
         database.Database.execute { context: DSLContext ->
             if (id == null) {
                 context.insertInto(
-                        BEERS, BEERS.NAME, BEERS.BREWERY, BEERS.PERCENTAGE, BEERS.COUNTRY, BEERS.STYLE, BEERS.COMMENT,
-                        BEERS.SSCORE, BEERS.OSCORE)
-                        .values(name, brewery, percentage, country, style, comment, sscore, oscore)
+                        BEVERAGES, BEVERAGES.NAME, BEVERAGES.BREWERY, BEVERAGES.PERCENTAGE, BEVERAGES.COUNTRY,
+                        BEVERAGES.STYLE, BEVERAGES.COMMENT, BEVERAGES.SSCORE, BEVERAGES.OSCORE,
+                        BEVERAGES.CATEGORY)
+                        .values(name, brewery, percentage, country, style, comment, sscore, oscore, CATEGORY_BEER)
                         .execute()
             } else {
-                context.update(BEERS)
-                        .set(BEERS.NAME, name)
-                        .set(BEERS.BREWERY, brewery)
-                        .set(BEERS.PERCENTAGE, percentage)
-                        .set(BEERS.COUNTRY, country)
-                        .set(BEERS.STYLE, style)
-                        .set(BEERS.COMMENT, comment)
-                        .set(BEERS.SSCORE, sscore)
-                        .set(BEERS.OSCORE, oscore)
-                        .where(BEERS.ID.eq(id))
+                context.update(BEVERAGES)
+                        .set(BEVERAGES.NAME, name)
+                        .set(BEVERAGES.BREWERY, brewery)
+                        .set(BEVERAGES.PERCENTAGE, percentage)
+                        .set(BEVERAGES.COUNTRY, country)
+                        .set(BEVERAGES.STYLE, style)
+                        .set(BEVERAGES.COMMENT, comment)
+                        .set(BEVERAGES.SSCORE, sscore)
+                        .set(BEVERAGES.OSCORE, oscore)
+                        .where(BEVERAGES.ID.eq(id))
                         .execute()
             }
         }
@@ -42,8 +34,9 @@ class Beer : Model(), Serializable {
         fun loadById(id: Int): Beer? {
             return database.Database.query { context: DSLContext ->
                 context.select()
-                       .from(BEERS)
-                       .where(BEERS.ID.eq(id))
+                       .from(BEVERAGES)
+                       .where(BEVERAGES.ID.eq(id))
+                       .and(BEVERAGES.CATEGORY.eq(CATEGORY_BEER))
                        .fetchAnyInto(Beer::class.java)
             }
         }
@@ -51,11 +44,12 @@ class Beer : Model(), Serializable {
         fun loadAll(): List<Beer> {
             return database.Database.queryAll { context: DSLContext ->
                 context.select()
-                       .from(BEERS)
+                       .from(BEVERAGES)
+                       .where(BEVERAGES.CATEGORY.eq(CATEGORY_BEER))
                        .fetchInto(Beer::class.java)
             }
         }
 
-        fun deleteById(id: Int) = Model.deleteById(id, BEERS, BEERS.ID)
+        fun deleteById(id: Int) = Model.deleteById(id, BEVERAGES, BEVERAGES.ID)
     }
 }
