@@ -1,13 +1,13 @@
 package controller
 
 import exceptions.HttpNotFound
-import model.Beer
+import model.beverage.Beer
 import service.JsonService
 import spark.Request
 import spark.Response
 import spark.Spark
 
-class BeersController : ModelController() {
+class BeerController : ModelController() {
     companion object {
 
         fun register(endpointUrl: String) {

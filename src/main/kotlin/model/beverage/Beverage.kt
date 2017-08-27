@@ -1,5 +1,6 @@
-package model
+package model.beverage
 
+import model.Model
 import java.io.Serializable
 import javax.persistence.Column
 
@@ -15,6 +16,9 @@ abstract class Beverage : Model(), Serializable {
 
     companion object {
         const val CATEGORY_BEER: Int = 0
+        const val CATEGORY_WINE: Int = 1
+        const val CATEGORY_SAKE: Int = 2
+        const val CATEGORY_WHISKEY: Int = 3
     }
 }
 
