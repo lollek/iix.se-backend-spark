@@ -1,6 +1,7 @@
 package model
 
 import org.jooq.*
+import service.DbService
 import javax.persistence.Column
 
 abstract class Model {
@@ -11,7 +12,7 @@ abstract class Model {
     companion object {
         @JvmStatic
         protected fun deleteById(id: Int, table: Table<*>, tableField: TableField<*, Int>) {
-            database.Database.execute { context: DSLContext ->
+            DbService.execute { context: DSLContext ->
                 context.deleteFrom(table)
                        .where(tableField.eq(id))
                        .execute()

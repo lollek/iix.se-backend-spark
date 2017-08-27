@@ -3,6 +3,7 @@ package model
 import org.jooq.DSLContext
 import org.jooq.generated.tables.Users.USERS
 import org.mindrot.jbcrypt.BCrypt
+import service.DbService
 import javax.persistence.Column
 
 class User() : Model() {
@@ -24,7 +25,7 @@ class User() : Model() {
 
     companion object {
         fun loadByUsername(username: String): User? {
-            return database.Database.query { context: DSLContext ->
+            return DbService.query { context: DSLContext ->
                 context.select()
                        .from(USERS)
                        .where(USERS.USERNAME.eq(username))

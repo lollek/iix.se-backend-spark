@@ -2,12 +2,13 @@ package model.beverage
 
 import org.jooq.DSLContext
 import org.jooq.generated.tables.Beverages.BEVERAGES
+import service.DbService
 import java.io.Serializable
 
 class Whiskey : Beverage(), Serializable {
 
     override fun save() {
-        database.Database.execute { context: DSLContext ->
+        DbService.execute { context: DSLContext ->
             if (id == null) {
                 context.insertInto(
                         BEVERAGES, BEVERAGES.NAME, BEVERAGES.BREWERY, BEVERAGES.PERCENTAGE, BEVERAGES.COUNTRY,
@@ -32,7 +33,7 @@ class Whiskey : Beverage(), Serializable {
     }
     companion object {
         fun loadById(id: Int): Whiskey? {
-            return database.Database.query { context: DSLContext ->
+            return DbService.query { context: DSLContext ->
                 context.select()
                        .from(BEVERAGES)
                        .where(BEVERAGES.ID.eq(id))
@@ -42,7 +43,7 @@ class Whiskey : Beverage(), Serializable {
         }
 
         fun loadAll(): List<Whiskey> {
-            return database.Database.queryAll { context: DSLContext ->
+            return DbService.queryAll { context: DSLContext ->
                 context.select()
                        .from(BEVERAGES)
                        .where(BEVERAGES.CATEGORY.eq(CATEGORY_WHISKEY))
