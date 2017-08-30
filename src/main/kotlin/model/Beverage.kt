@@ -6,7 +6,7 @@ import java.io.Serializable
 import javax.persistence.Column
 import org.jooq.generated.tables.Beverages.BEVERAGES
 
- class Beverage : Model(), Serializable {
+class Beverage : Model(), Serializable {
     @Column(name = "NAME") var name: String? = null
     @Column(name = "BREWERY") var brewery: String? = null
     @Column(name = "PERCENTAGE") var percentage: Double? = null
@@ -17,7 +17,16 @@ import org.jooq.generated.tables.Beverages.BEVERAGES
     @Column(name = "OSCORE") var oscore: Double? = null
     @Column(name = "CATEGORY") var category: Int? = null
 
+
+    fun validateBeforeSave() {
+        if (category == null) {
+            category = Category.BEER.ordinal
+        }
+    }
+
     override fun save() {
+        validateBeforeSave()
+
         DbService.execute { context: DSLContext ->
             if (id == null) {
                 context.insertInto(
