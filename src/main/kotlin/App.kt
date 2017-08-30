@@ -18,15 +18,12 @@ class App {
             Spark.ipAddress(System.getProperty("ip"))
             Spark.port(8002)
 
-            BeerController.register("/api/beer")
+            BeverageController.register("/api/beverages")
             BooksController.register("/api/books")
             GamesController.register("/api/games")
             LoginController.register("/api/login")
             MarkdownTextsController.register("/api/markdown")
             NotesController.register("api/notes")
-            SakeController.register("/api/sake")
-            WhiskeyController.register("/api/whiskey")
-            WineController.register("/api/wine")
 
             Spark.connect("*", fun(_:Request, _: Response) { throw HttpNotFound() })
             Spark.delete("*", fun(_:Request, _: Response) { throw HttpNotFound() })

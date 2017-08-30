@@ -1,11 +1,21 @@
-package model.beverage
+package model
 
 import org.jooq.DSLContext
-import org.jooq.generated.tables.Beverages.BEVERAGES
 import service.DbService
 import java.io.Serializable
+import javax.persistence.Column
+import org.jooq.generated.tables.Beverages.BEVERAGES
 
-class Whiskey : Beverage(), Serializable {
+ class Beverage : Model(), Serializable {
+    @Column(name = "NAME") var name: String? = null
+    @Column(name = "BREWERY") var brewery: String? = null
+    @Column(name = "PERCENTAGE") var percentage: Double? = null
+    @Column(name = "COUNTRY") var country: String? = null
+    @Column(name = "STYLE") var style: String? = null
+    @Column(name = "COMMENT") var comment: String? = null
+    @Column(name = "SSCORE") var sscore: Double? = null
+    @Column(name = "OSCORE") var oscore: Double? = null
+    @Column(name = "CATEGORY") var category: Int? = null
 
     override fun save() {
         DbService.execute { context: DSLContext ->
@@ -14,7 +24,7 @@ class Whiskey : Beverage(), Serializable {
                         BEVERAGES, BEVERAGES.NAME, BEVERAGES.BREWERY, BEVERAGES.PERCENTAGE, BEVERAGES.COUNTRY,
                         BEVERAGES.STYLE, BEVERAGES.COMMENT, BEVERAGES.SSCORE, BEVERAGES.OSCORE,
                         BEVERAGES.CATEGORY)
-                        .values(name, brewery, percentage, country, style, comment, sscore, oscore, CATEGORY_WHISKEY)
+                        .values(name, brewery, percentage, country, style, comment, sscore, oscore, category)
                         .execute()
             } else {
                 context.update(BEVERAGES)
@@ -26,31 +36,39 @@ class Whiskey : Beverage(), Serializable {
                         .set(BEVERAGES.COMMENT, comment)
                         .set(BEVERAGES.SSCORE, sscore)
                         .set(BEVERAGES.OSCORE, oscore)
-                        .where(BEVERAGES.ID.eq(id))
+                        .set(BEVERAGES.CATEGORY, category)
                         .execute()
             }
         }
     }
+
     companion object {
-        fun loadById(id: Int): Whiskey? {
+        enum class Category(val id: Int) {
+            BEER(0),
+            WINE(1),
+            SAKE(2),
+            WHISKEY(3);
+        }
+
+        fun loadById(id: Int): Beverage? {
             return DbService.query { context: DSLContext ->
                 context.select()
-                       .from(BEVERAGES)
-                       .where(BEVERAGES.ID.eq(id))
-                       .and(BEVERAGES.CATEGORY.eq(CATEGORY_WHISKEY))
-                       .fetchAnyInto(Whiskey::class.java)
+                        .from(BEVERAGES)
+                        .where(BEVERAGES.ID.eq(id))
+                        .fetchAnyInto(Beverage::class.java)
             }
         }
 
-        fun loadAll(): List<Whiskey> {
+        fun loadAll(category: Category): List<Beverage> {
             return DbService.queryAll { context: DSLContext ->
                 context.select()
-                       .from(BEVERAGES)
-                       .where(BEVERAGES.CATEGORY.eq(CATEGORY_WHISKEY))
-                       .fetchInto(Whiskey::class.java)
+                        .from(BEVERAGES)
+                        .where(BEVERAGES.CATEGORY.eq(category.ordinal))
+                        .fetchInto(Beverage::class.java)
             }
         }
 
         fun deleteById(id: Int) = deleteById(id, BEVERAGES, BEVERAGES.ID)
     }
 }
+
