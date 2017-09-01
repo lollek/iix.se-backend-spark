@@ -1,36 +1,66 @@
 package service
 
+import io.jsonwebtoken.impl.crypto.MacProvider
 import model.User
 import spark.Request
+import java.security.Key
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
+import spark.Response
+
 
 class AccessService {
     companion object {
+        private val key: Key = MacProvider.generateKey()
+        private val AUTHORIZATION_HEADER = "Authorization"
+        private val AUTHORIZATION_PREFIX = "Bearer "
+
 
         fun isLoggedIn(request: Request): Boolean {
-            return getUsername(request) != null
-        }
-
-        fun getUsername(request: Request): String? {
-            return request.session().attribute("username")
+            return validateJWT(getJWTFromRequest(request) ?: return false)
         }
 
         fun getUser(request: Request): User? {
-            val username: String? = getUsername(request)
-            return if (username != null) User(username) else null
+            return User.loadByUsername(getUsernameFromJWT(getJWTFromRequest(request) ?: return null) ?: return null)
         }
 
-        fun login(request: Request, username: String, password: String): Boolean {
-            val user: User? = User.loadByUsername(username)
-            if (user == null || !user.auth(password)) {
+        fun login(response: Response, username: String, password: String): Boolean {
+            val user: User = User.loadByUsername(username) ?: return false
+            if (!user.auth(password)) {
                 return false
             }
 
-            request.session().attribute("username", username)
+            response.header(AUTHORIZATION_HEADER, "$AUTHORIZATION_PREFIX${generateJWT(user)}")
             return true
         }
 
-        fun logout(request: Request) {
-            request.session().attribute("username", null)
+        private fun getJWTFromRequest(request: Request): String? {
+            val authHeader = request.headers(AUTHORIZATION_HEADER) ?: return null
+            return authHeader.removePrefix(AUTHORIZATION_PREFIX)
+        }
+
+        private fun generateJWT(user: User): String {
+            return Jwts.builder()
+                    .setSubject(user.username!!)
+                    .signWith(SignatureAlgorithm.HS512, key)
+                    .compact()
+        }
+
+        private fun validateJWT(token: String): Boolean {
+            try {
+                Jwts.parser().setSigningKey(key).parseClaimsJws(token)
+                return true
+            } catch (e: Exception) {
+                return false
+            }
+        }
+
+        private fun getUsernameFromJWT(token: String): String? {
+            try {
+                return Jwts.parser().setSigningKey(key).parseClaimsJws(token).body.subject
+            } catch (e: Exception) {
+                return null
+            }
         }
     }
 }

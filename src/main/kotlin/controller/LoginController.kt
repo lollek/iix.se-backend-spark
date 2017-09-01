@@ -17,7 +17,6 @@ class LoginController {
         fun register(endpointUrl: String) {
             Spark.get(endpointUrl, checkLogin, JsonService.gson::toJson)
             Spark.post(endpointUrl, login, JsonService.gson::toJson)
-            Spark.delete(endpointUrl, logout, JsonService.gson::toJson)
         }
 
         private val checkLogin = fun(request: Request, _: Response): User {
@@ -27,27 +26,16 @@ class LoginController {
             return AccessService.getUser(request) ?: throw HttpInternalServerError()
         }
 
-        private val login = fun(request: Request, _: Response): User {
-            val data: Map<String, Any>? = JsonService.jsonToMap(request.body())
-            val username: String? = data?.get("username")?.toString()
-            val password: String? = data?.get("password")?.toString()
+        private val login = fun(request: Request, response: Response): User {
+            val data: Map<String, Any> = JsonService.jsonToMap(request.body()) ?: throw HttpBadRequest("Failed to parse json")
 
-            if (username == null || username.isEmpty() || password == null) {
-                throw HttpBadRequest("")
-            }
+            val username: String = data["username"]?.toString() ?: throw HttpForbidden("Missing username")
+            val password: String = data["password"]?.toString() ?: throw HttpForbidden("Missing password")
 
-            if (!AccessService.login(request, username, password)) {
+            if (!AccessService.login(response, username, password)) {
                 throw HttpForbidden("Username or password is incorrect")
             }
-
             return User(username)
-        }
-
-        private val logout = fun(request: Request, _: Response): String {
-            AccessService.logout(request)
-            return ""
         }
     }
 }
-
-
