@@ -1,17 +1,17 @@
 package service
 
-import io.jsonwebtoken.impl.crypto.MacProvider
 import model.User
 import spark.Request
 import java.security.Key
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import spark.Response
+import javax.crypto.spec.SecretKeySpec
 
 
 class AccessService {
     companion object {
-        private val key: Key = MacProvider.generateKey()
+        private val key: Key = SecretKeySpec(System.getProperty("jwt").toByteArray(), SignatureAlgorithm.HS256.jcaName)
         private val AUTHORIZATION_HEADER = "Authorization"
         private val AUTHORIZATION_PREFIX = "Bearer "
 
