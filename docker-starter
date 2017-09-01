@@ -11,11 +11,13 @@ die() {
 [[ -z ${DBUSER} ]] && die "Environment variable DBUSER missing"
 [[ -z ${DBPASSWORD} ]] && die "Environment variable DBPASSWORD missing"
 [[ -z ${DBPASSWORD} ]] && die "Environment variable GOODREADS_KEY missing"
+[[ -z ${JWT} ]] && die "Environment variable JWT missing"
 
 export SPARK_BACKEND_OPTS="-Dip=${IP} \
   -DdbPath=${DBPATH} \
   -DdbUser=${DBUSER} \
   -DdbPassword=${DBPASSWORD} \
-  -DgoodreadsApiKey=${GOODREADS_KEY}"
+  -DgoodreadsApiKey=${GOODREADS_KEY} \
+  -Djwt=${JWT}"
 
 exec /app/bin/spark-backend

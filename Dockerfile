@@ -12,6 +12,7 @@ ENV DBPATH ""
 ENV DBUSER ""
 ENV DBPASSWORD ""
 ENV GOODREADS_KEY ""
+ENV JWT ""
 
 CMD ["/app/init"]
 
