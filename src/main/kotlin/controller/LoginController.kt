@@ -23,7 +23,7 @@ class LoginController {
             if (!AccessService.isLoggedIn(request)) {
                 throw HttpUnauthorized()
             }
-            return AccessService.getUser(request) ?: throw HttpInternalServerError()
+            return AccessService.getUser(request)?.toSanitizedUser() ?: throw HttpInternalServerError()
         }
 
         private val login = fun(request: Request, response: Response): User {
@@ -32,10 +32,7 @@ class LoginController {
             val username: String = data["username"]?.toString() ?: throw HttpForbidden("Missing username")
             val password: String = data["password"]?.toString() ?: throw HttpForbidden("Missing password")
 
-            if (!AccessService.login(response, username, password)) {
-                throw HttpForbidden("Username or password is incorrect")
-            }
-            return User(username)
+            return AccessService.login(response, username, password)?.toSanitizedUser() ?: throw HttpForbidden("Username or password is incorrect")
         }
     }
 }

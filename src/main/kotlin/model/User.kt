@@ -23,6 +23,13 @@ class User() : Model() {
         return this.password != null && BCrypt.checkpw(password, this.password)
     }
 
+    fun toSanitizedUser(): User {
+        val user: User = User()
+        user.id = this.id
+        user.username = this.username
+        return user
+    }
+
     companion object {
         fun loadByUsername(username: String): User? {
             return DbService.query { context: DSLContext ->

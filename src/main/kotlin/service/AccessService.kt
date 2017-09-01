@@ -24,14 +24,14 @@ class AccessService {
             return User.loadByUsername(getUsernameFromJWT(getJWTFromRequest(request) ?: return null) ?: return null)
         }
 
-        fun login(response: Response, username: String, password: String): Boolean {
-            val user: User = User.loadByUsername(username) ?: return false
+        fun login(response: Response, username: String, password: String): User? {
+            val user: User = User.loadByUsername(username) ?: return null
             if (!user.auth(password)) {
-                return false
+                return null
             }
 
             response.header(AUTHORIZATION_HEADER, "$AUTHORIZATION_PREFIX${generateJWT(user)}")
-            return true
+            return user
         }
 
         private fun getJWTFromRequest(request: Request): String? {
