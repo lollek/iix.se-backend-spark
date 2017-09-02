@@ -22,7 +22,12 @@ class MarkdownTextsController : ModelController() {
             return request.params("name") ?: throw HttpNotFound()
         }
 
-        val show = fun(request: Request, _: Response): MarkdownText = MarkdownText.loadByName(getName(request)) ?: throw HttpNotFound()
+        val show = fun(request: Request, _: Response): MarkdownText {
+            if (!AccessService.isLoggedIn(request)) {
+                throw HttpUnauthorized()
+            }
+            return MarkdownText.loadByName(getName(request)) ?: throw HttpNotFound()
+        }
 
         val update = fun(request: Request, _: Response): MarkdownText {
             if (!AccessService.isLoggedIn(request)) {
