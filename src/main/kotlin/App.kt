@@ -50,6 +50,7 @@ class App {
             })
             Spark.after("*", fun(_: Request, response: Response) {
                 response.type("application/json")
+                response.header("Access-Control-Allow-Origin", "*")
             })
             Spark.after("*", fun(request: Request, response: Response) = LogService.logAccess(request, response))
 
