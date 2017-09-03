@@ -46,6 +46,7 @@ class Beverage : Model(), Serializable {
                         .set(BEVERAGES.SSCORE, sscore)
                         .set(BEVERAGES.OSCORE, oscore)
                         .set(BEVERAGES.CATEGORY, category)
+                        .where(BEVERAGES.ID.eq(id))
                         .execute()
             }
         }
