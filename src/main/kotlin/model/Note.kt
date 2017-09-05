@@ -15,9 +15,11 @@ class Note : Model(), Serializable {
     override fun save() {
         DbService.execute { context: DSLContext ->
             if (id == null) {
-                context.insertInto(NOTES, NOTES.TITLE, NOTES.TEXT, NOTES.DATE)
+                id = context.insertInto(NOTES, NOTES.TITLE, NOTES.TEXT, NOTES.DATE)
                         .values(title, text, date)
-                        .execute()
+                        .returning(NOTES.ID)
+                        .fetchOne()
+                        .id
             } else {
                 context.update(NOTES)
                        .set(NOTES.TITLE, title)

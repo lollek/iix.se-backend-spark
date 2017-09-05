@@ -29,12 +29,14 @@ class Beverage : Model(), Serializable {
 
         DbService.execute { context: DSLContext ->
             if (id == null) {
-                context.insertInto(
+                id = context.insertInto(
                         BEVERAGES, BEVERAGES.NAME, BEVERAGES.BREWERY, BEVERAGES.PERCENTAGE, BEVERAGES.COUNTRY,
                         BEVERAGES.STYLE, BEVERAGES.COMMENT, BEVERAGES.SSCORE, BEVERAGES.OSCORE,
                         BEVERAGES.CATEGORY)
                         .values(name, brewery, percentage, country, style, comment, sscore, oscore, category)
-                        .execute()
+                        .returning(BEVERAGES.ID)
+                        .fetchOne()
+                        .id
             } else {
                 context.update(BEVERAGES)
                         .set(BEVERAGES.NAME, name)
