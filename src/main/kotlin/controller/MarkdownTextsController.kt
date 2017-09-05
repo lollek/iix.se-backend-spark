@@ -26,7 +26,7 @@ class MarkdownTextsController : ModelController() {
             if (!AccessService.isLoggedIn(request)) {
                 throw HttpUnauthorized()
             }
-            return MarkdownText.loadByName(getName(request)) ?: throw HttpNotFound()
+            return MarkdownText.loadByName(getName(request))?.sanitizedCopy() ?: throw HttpNotFound()
         }
 
         val update = fun(request: Request, _: Response): MarkdownText {
@@ -39,7 +39,7 @@ class MarkdownTextsController : ModelController() {
             obj.data = jsonObject.data
             obj.save()
 
-            return obj
+            return obj.sanitizedCopy()
         }
     }
 

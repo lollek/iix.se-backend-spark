@@ -23,7 +23,7 @@ class User() : Model() {
         return this.password != null && BCrypt.checkpw(password, this.password)
     }
 
-    fun toSanitizedUser(): User {
+    fun sanitizedCopy(): User {
         val user: User = User()
         user.id = this.id
         user.username = this.username

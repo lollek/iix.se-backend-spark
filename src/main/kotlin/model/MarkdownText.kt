@@ -26,6 +26,14 @@ class MarkdownText : Model(), Serializable {
             }
         }
     }
+
+    fun sanitizedCopy(): MarkdownText {
+        val obj: MarkdownText = MarkdownText()
+        obj.name = this.name
+        obj.data = this.data
+        return obj
+    }
+
     companion object {
         fun loadByName(name: String): MarkdownText? {
             return DbService.query { context: DSLContext ->
