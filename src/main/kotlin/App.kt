@@ -15,7 +15,7 @@ class App {
         @JvmStatic
         @Throws(SQLException::class)
         fun main(vararg args: String) {
-            Spark.ipAddress(System.getProperty("ip"))
+            Spark.ipAddress("0.0.0.0")
             Spark.port(8002)
 
             BeverageController.register("/api/beverages")
