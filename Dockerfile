@@ -7,7 +7,6 @@ ADD docker-starter /app/init
 RUN useradd -ms /bin/bash www
 USER www
 
-ENV IP "127.0.0.1"
 ENV DBPATH ""
 ENV DBUSER ""
 ENV DBPASSWORD ""

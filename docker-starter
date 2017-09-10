@@ -6,15 +6,13 @@ die() {
   exit 1
 }
 
-[[ -z ${IP} ]] && die "Environment variable IP missing"
 [[ -z ${DBPATH} ]] && die "Environment variable DBPATH missing"
 [[ -z ${DBUSER} ]] && die "Environment variable DBUSER missing"
 [[ -z ${DBPASSWORD} ]] && die "Environment variable DBPASSWORD missing"
 [[ -z ${DBPASSWORD} ]] && die "Environment variable GOODREADS_KEY missing"
 [[ -z ${JWT} ]] && die "Environment variable JWT missing"
 
-export SPARK_BACKEND_OPTS="-Dip=${IP} \
-  -DdbPath=${DBPATH} \
+export SPARK_BACKEND_OPTS="-DdbPath=${DBPATH} \
   -DdbUser=${DBUSER} \
   -DdbPassword=${DBPASSWORD} \
   -DgoodreadsApiKey=${GOODREADS_KEY} \
