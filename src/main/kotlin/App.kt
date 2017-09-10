@@ -48,9 +48,12 @@ class App {
                 LogService.logException(exception)
                 LogService.logAccess(request, response)
             })
-            Spark.after("*", fun(_: Request, response: Response) {
+            Spark.after("*", fun(request: Request, response: Response) {
                 response.type("application/json")
                 response.header("Access-Control-Allow-Origin", "*")
+                if (request.headers("Accept-Encoding")?.contains("gzip") == true) {
+                    response.header("Content-Encoding", "gzip")
+                }
             })
             Spark.after("*", fun(request: Request, response: Response) = LogService.logAccess(request, response))
 
