@@ -28,10 +28,19 @@ class BeverageController : ModelController() {
             }
         }
 
-        val index = fun(request: Request, _: Response): List<Beverage> = Beverage.loadAll(getCategory(request))
-        val show = fun(request: Request, _: Response): Beverage = Beverage.loadById(getId(request)) ?: throw HttpNotFound()
-        val save = fun(request: Request, response: Response): Beverage = save(Beverage::class.java, request, response)
-        val update = fun(request: Request, response: Response): Beverage = update(Beverage::class.java, request, response)
-        val delete = fun(request: Request, response: Response): String = delete(request, response, fun() = Beverage.deleteById(getId(request)))
+        val index = fun(request: Request, _: Response): List<Beverage>
+                = Beverage.loadAll(getCategory(request))
+
+        val show = fun(request: Request, _: Response): Beverage
+                = Beverage.loadById(getId(request)) ?: throw HttpNotFound()
+
+        val save = fun(request: Request, response: Response): Beverage
+                = save(Beverage::class.java, request, response)
+
+        val update = fun(request: Request, response: Response): Beverage
+                = update(Beverage::class.java, request, response)
+
+        val delete = fun(request: Request, response: Response): String
+                = delete(request, response, fun() = Beverage.deleteById(getId(request)))
     }
 }

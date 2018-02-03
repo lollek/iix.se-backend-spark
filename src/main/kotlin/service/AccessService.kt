@@ -1,5 +1,6 @@
 package service
 
+import exceptions.HttpUnauthorized
 import model.User
 import spark.Request
 import java.security.Key
@@ -15,6 +16,12 @@ class AccessService {
         private val AUTHORIZATION_HEADER = "Authorization"
         private val AUTHORIZATION_PREFIX = "Bearer "
 
+        fun <T> doIfLoggedIn(request: Request, fn: () -> T): T {
+            if (!AccessService.isLoggedIn(request)) {
+                throw HttpUnauthorized()
+            }
+            return fn()
+        }
 
         fun isLoggedIn(request: Request): Boolean {
             return validateJWT(getJWTFromRequest(request) ?: return false)

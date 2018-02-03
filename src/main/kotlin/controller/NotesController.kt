@@ -18,10 +18,19 @@ class NotesController : ModelController() {
             Spark.delete("$endpointUrl/:id", delete, JsonService.gson::toJson)
         }
 
-        val index = fun(_: Request, _: Response): List<Note> = Note.loadAllAsRef()
-        val show = fun(request: Request, _: Response): Note = Note.loadById(getId(request)) ?: throw HttpNotFound()
-        val save = fun(request: Request, response: Response): Note = save(Note::class.java, request, response)
-        val update = fun(request: Request, response: Response): Note = update(Note::class.java, request, response)
-        val delete = fun(request: Request, response: Response): String = delete(request, response, fun() = Note.deleteById(getId(request)))
+        val index = fun(_: Request, _: Response): List<Note>
+                = Note.loadAllAsRef()
+
+        val show = fun(request: Request, _: Response): Note
+                = Note.loadById(getId(request)) ?: throw HttpNotFound()
+
+        val save = fun(request: Request, response: Response): Note
+                = save(Note::class.java, request, response)
+
+        val update = fun(request: Request, response: Response): Note
+                = update(Note::class.java, request, response)
+
+        val delete = fun(request: Request, response: Response): String
+                = delete(request, response, fun() = Note.deleteById(getId(request)))
     }
 }
