@@ -24,7 +24,6 @@ class App {
             LoginController.register("/api/login")
             MarkdownTextsController.register("/api/markdown")
             NotesController.register("api/notes")
-            WordsController.register("api/words")
 
             Spark.connect("*", fun(_:Request, _: Response) { throw HttpNotFound() })
             Spark.delete("*", fun(_:Request, _: Response) { throw HttpNotFound() })
