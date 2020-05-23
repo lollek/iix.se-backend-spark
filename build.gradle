@@ -41,9 +41,9 @@ jooq {
     iix(sourceSets.main) {
         jdbc {
             driver = 'org.postgresql.Driver'
-            url = 'jdbc:postgresql://david2:54321/iix-notes'
-            user = 'www-data'
-            password = 'www-data'
+            url = 'jdbc:postgresql://localhost:5432/iix-notes'
+            user = 'postgres'
+            password = 'password'
         }
         generator {
             name = 'org.jooq.util.DefaultGenerator'
