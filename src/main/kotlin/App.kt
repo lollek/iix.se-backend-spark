@@ -20,7 +20,6 @@ class App {
 
             BeverageController.register("/api/beverages")
             BooksController.register("/api/books")
-            GamesController.register("/api/games")
             LoginController.register("/api/login")
             MarkdownTextsController.register("/api/markdown")
             NotesController.register("api/notes")
