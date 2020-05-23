@@ -5,4 +5,4 @@ rm -rf build/distributions/*
 ./gradlew generateIixJooqSchemaSource
 ./gradlew distTar
 
-sudo docker build -t loll3k/spark-backend .
+docker build -t loll3k/spark-backend -t loll3k/spark-backend:$(date "+%Y-%m-%d") .
